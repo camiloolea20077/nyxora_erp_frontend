@@ -1,0 +1,144 @@
+.sidebar {
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--nx-surface);
+  border-right: 1px solid var(--nx-border);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo */
+.side-logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--nx-border);
+  flex-shrink: 0;
+}
+.logo-img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Nav scrollable */
+.side-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 0.6rem 1.5rem;
+}
+.side-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.side-nav::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+/* Cabecera de grupo (padre) */
+.nav-group {
+  margin-bottom: 0.15rem;
+}
+.group-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.62rem 0.7rem;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  cursor: pointer;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.12s ease;
+}
+.group-head:hover {
+  background: #f1f5f9;
+}
+.g-icon {
+  font-size: 1.05rem;
+  width: 1.3rem;
+  text-align: center;
+  color: var(--nx-muted);
+  flex-shrink: 0;
+}
+.g-label {
+  flex: 1;
+  text-align: left;
+}
+.g-caret {
+  font-size: 0.75rem;
+  color: var(--nx-muted);
+  transition: transform 0.18s ease;
+  transform: rotate(-90deg);
+}
+.nav-group.open .g-caret {
+  transform: rotate(0deg);
+}
+.nav-group.open .group-head {
+  color: var(--nx-text);
+}
+.nav-group.open .g-icon {
+  color: var(--nx-primary);
+}
+
+/* Ítems (hijos) */
+.group-items {
+  margin: 0.1rem 0 0.4rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--nx-border);
+  margin-left: 1.05rem;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  margin: 0.08rem 0;
+  border-radius: 8px;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+.nav-item i {
+  font-size: 0.95rem;
+  width: 1.15rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.nav-item:hover {
+  background: #f1f5f9;
+  color: var(--nx-text);
+}
+.nav-item.active {
+  background: var(--nx-primary-soft);
+  color: var(--nx-primary);
+  font-weight: 600;
+}
+.nav-item.active i {
+  color: var(--nx-primary);
+}
+
+/* Dashboard fijo arriba */
+.nav-item.solo {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+.nav-item.solo i {
+  width: 1.3rem;
+  font-size: 1.05rem;
+}
+
+.nav-text {
+  white-space: nowrap;
+}

@@ -1,0 +1,37 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar vigencia' : 'Nueva vigencia'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '420px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="year">Año</label>
+      <p-inputNumber
+        inputId="year"
+        formControlName="year"
+        [useGrouping]="false"
+        [min]="2000"
+        [max]="2100"
+        styleClass="w-full"
+        [inputStyle]="{ width: '100%' }"
+      />
+      @if (invalidYear) {
+        <small class="error">Ingresa un año válido</small>
+      }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

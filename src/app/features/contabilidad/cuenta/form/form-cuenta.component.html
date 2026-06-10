@@ -1,0 +1,53 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar cuenta' : 'Nueva cuenta'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '620px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="cu-codigo">Código *</label>
+        <input pInputText id="cu-codigo" formControlName="codigoCuenta" [class.ng-invalid]="isInvalid('codigoCuenta')" />
+        @if (isInvalid('codigoCuenta')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="cu-padre">Cuenta padre</label>
+        <p-select inputId="cu-padre" formControlName="cuentaPadreId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="(Raíz)" />
+      </div>
+      <div class="field col-2">
+        <label for="cu-nombre">Nombre *</label>
+        <input pInputText id="cu-nombre" formControlName="nombreCuenta" [class.ng-invalid]="isInvalid('nombreCuenta')" />
+        @if (isInvalid('nombreCuenta')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="cu-nat">Naturaleza</label>
+        <p-select inputId="cu-nat" formControlName="naturaleza" [options]="naturalezas" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="cu-tipo">Tipo de cuenta</label>
+        <p-select inputId="cu-tipo" formControlName="tipoCuenta" [options]="tipos" optionLabel="label" optionValue="value" />
+      </div>
+    </div>
+
+    <div class="checks">
+      <div class="chk"><p-checkbox formControlName="manejaMovimiento" [binary]="true" inputId="cu-mov" /><label for="cu-mov">Maneja movimiento</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaMovimientoManual" [binary]="true" inputId="cu-movm" /><label for="cu-movm">Movimiento manual</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaTercero" [binary]="true" inputId="cu-ter" /><label for="cu-ter">Maneja tercero</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaCentroCosto" [binary]="true" inputId="cu-cc" /><label for="cu-cc">Maneja centro de costo</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaImpuesto" [binary]="true" inputId="cu-imp" /><label for="cu-imp">Maneja impuesto</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaProyecto" [binary]="true" inputId="cu-pro" /><label for="cu-pro">Maneja proyecto</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaRecurso" [binary]="true" inputId="cu-rec" /><label for="cu-rec">Maneja recurso</label></div>
+      <div class="chk"><p-checkbox formControlName="manejaSaldoContrario" [binary]="true" inputId="cu-sc" /><label for="cu-sc">Permite saldo contrario</label></div>
+      <div class="chk"><p-checkbox formControlName="esCorriente" [binary]="true" inputId="cu-cor" /><label for="cu-cor">Es corriente</label></div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

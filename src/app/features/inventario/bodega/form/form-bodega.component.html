@@ -1,0 +1,57 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar bodega' : 'Nueva bodega'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="b-codigo">Código *</label>
+        <input pInputText id="b-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="b-nombre">Nombre *</label>
+        <input pInputText id="b-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="b-sede">Sede</label>
+        <p-select inputId="b-sede" formControlName="sedeId" [options]="sedes()" optionLabel="name" optionValue="id" [showClear]="true" placeholder="(Ninguna)" />
+      </div>
+      <div class="field">
+        <label for="b-cc">Centro de costo</label>
+        <p-select inputId="b-cc" formControlName="centroCostoId" [options]="centros()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Ninguno)" />
+      </div>
+      <div class="field">
+        <label for="b-tipo">Tipo de abastecimiento</label>
+        <input pInputText id="b-tipo" formControlName="tipoAbastecimiento" />
+      </div>
+      <div class="field">
+        <label for="b-dir">Dirección</label>
+        <input pInputText id="b-dir" formControlName="direccion" />
+      </div>
+      <div class="field">
+        <label for="b-lat">Latitud</label>
+        <input pInputText id="b-lat" formControlName="latitud" />
+      </div>
+      <div class="field">
+        <label for="b-lng">Longitud</label>
+        <input pInputText id="b-lng" formControlName="longitud" />
+      </div>
+    </div>
+    <div class="field-check">
+      <p-checkbox formControlName="permiteCompra" [binary]="true" inputId="b-compra" />
+      <label for="b-compra">Permite compra</label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

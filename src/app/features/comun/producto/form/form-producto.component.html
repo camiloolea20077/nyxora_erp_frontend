@@ -1,0 +1,148 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-box"></i></span>
+      <div>
+        <h1 class="head-title">{{ isEdit() ? 'Editar producto' : 'Nuevo producto' }}</h1>
+        <p class="head-sub">Datos generales, inventario, impuestos y satélites</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0"><i class="pi pi-box"></i> Información</p-tab>
+        @if (productoId()) {
+          <p-tab value="1"><i class="pi pi-clone"></i> Variantes</p-tab>
+          <p-tab value="2"><i class="pi pi-truck"></i> Proveedores</p-tab>
+        }
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <form [formGroup]="frm" class="prod-form">
+            <!-- General -->
+            <section class="sec">
+              <h3 class="sec-title">General</h3>
+              <div class="grid">
+                <div class="field">
+                  <label for="p-codigo">Código *</label>
+                  <input pInputText id="p-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+                  @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+                </div>
+                <div class="field">
+                  <label for="p-unspsc">Código UNSPSC</label>
+                  <input pInputText id="p-unspsc" formControlName="codigoUnspsc" />
+                </div>
+                <div class="field">
+                  <label for="p-tipo">Tipo</label>
+                  <p-select inputId="p-tipo" formControlName="tipo" [options]="tipos" optionLabel="label" optionValue="value" />
+                </div>
+                <div class="field col-2">
+                  <label for="p-nombre">Nombre *</label>
+                  <input pInputText id="p-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+                  @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+                </div>
+                <div class="field">
+                  <label for="p-categoria">Categoría</label>
+                  <p-select inputId="p-categoria" formControlName="categoriaId" [options]="categorias()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Selecciona…" />
+                </div>
+                <div class="field col-3">
+                  <label for="p-desc">Descripción</label>
+                  <input pInputText id="p-desc" formControlName="descripcion" />
+                </div>
+              </div>
+              <div class="checks">
+                <div class="chk"><p-checkbox formControlName="esCompuesto" [binary]="true" inputId="p-comp" /><label for="p-comp">Es compuesto</label></div>
+                <div class="chk"><p-checkbox formControlName="esPos" [binary]="true" inputId="p-pos" /><label for="p-pos">Disponible en POS</label></div>
+              </div>
+            </section>
+
+            <!-- Unidades -->
+            <section class="sec">
+              <h3 class="sec-title">Unidades</h3>
+              <div class="grid">
+                <div class="field">
+                  <label for="p-umayor">Unidad mayor</label>
+                  <p-select inputId="p-umayor" formControlName="unidadMayorId" [options]="unidades()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Selecciona…" />
+                </div>
+                <div class="field">
+                  <label for="p-umenor">Unidad menor</label>
+                  <p-select inputId="p-umenor" formControlName="unidadMenorId" [options]="unidades()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Selecciona…" />
+                </div>
+                <div class="field">
+                  <label for="p-contenido">Contenido</label>
+                  <p-inputNumber inputId="p-contenido" formControlName="contenido" [minFractionDigits]="0" [maxFractionDigits]="4" />
+                </div>
+              </div>
+            </section>
+
+            <!-- Inventario -->
+            <section class="sec">
+              <h3 class="sec-title">Inventario</h3>
+              <div class="grid">
+                <div class="field">
+                  <label for="p-smin">Stock mínimo</label>
+                  <p-inputNumber inputId="p-smin" formControlName="stockMinimo" [minFractionDigits]="0" [maxFractionDigits]="4" />
+                </div>
+                <div class="field">
+                  <label for="p-smax">Stock máximo</label>
+                  <p-inputNumber inputId="p-smax" formControlName="stockMaximo" [minFractionDigits]="0" [maxFractionDigits]="4" />
+                </div>
+                <div class="field">
+                  <label for="p-reab">Reabastecimiento (días)</label>
+                  <p-inputNumber inputId="p-reab" formControlName="tiempoReabastecimiento" [useGrouping]="false" />
+                </div>
+              </div>
+              <div class="checks">
+                <div class="chk"><p-checkbox formControlName="manejaInventario" [binary]="true" inputId="p-inv" /><label for="p-inv">Maneja inventario</label></div>
+                <div class="chk"><p-checkbox formControlName="manejaLote" [binary]="true" inputId="p-lote" /><label for="p-lote">Maneja lote</label></div>
+                <div class="chk"><p-checkbox formControlName="manejaDesperdicio" [binary]="true" inputId="p-desp" /><label for="p-desp">Maneja desperdicio</label></div>
+                <div class="chk"><p-checkbox formControlName="esDevolutivo" [binary]="true" inputId="p-dev" /><label for="p-dev">Es devolutivo</label></div>
+              </div>
+            </section>
+
+            <!-- Impuestos y costeo -->
+            <section class="sec">
+              <h3 class="sec-title">Impuestos y costeo</h3>
+              <div class="grid">
+                <div class="field">
+                  <label for="p-imp">Impuesto principal</label>
+                  <p-select inputId="p-imp" formControlName="impuestoId" [options]="impuestos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Selecciona…" />
+                </div>
+                <div class="field col-2">
+                  <label for="p-imps">Impuestos adicionales</label>
+                  <p-multiSelect inputId="p-imps" formControlName="impuestoIds" [options]="impuestos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" display="chip" placeholder="Selecciona…" />
+                </div>
+                <div class="field">
+                  <label for="p-tarmax">Tarifa máxima</label>
+                  <p-inputNumber inputId="p-tarmax" formControlName="tarifaMaxima" [minFractionDigits]="0" [maxFractionDigits]="4" />
+                </div>
+                <div class="field">
+                  <label for="p-recurso">Recurso (costeo)</label>
+                  <p-select inputId="p-recurso" formControlName="recursoId" [options]="recursos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Selecciona…" />
+                </div>
+              </div>
+              <div class="checks">
+                <div class="chk"><p-checkbox formControlName="discriminaIva" [binary]="true" inputId="p-iva" /><label for="p-iva">Discrimina IVA</label></div>
+                <div class="chk"><p-checkbox formControlName="aplicaImpuestoBolsa" [binary]="true" inputId="p-bolsa" /><label for="p-bolsa">Aplica impuesto de bolsa</label></div>
+              </div>
+            </section>
+          </form>
+        </p-tabpanel>
+
+        @if (productoId(); as pid) {
+          <p-tabpanel value="1"><app-variantes-producto [productoId]="pid" /></p-tabpanel>
+          <p-tabpanel value="2"><app-proveedores-producto [productoId]="pid" /></p-tabpanel>
+        }
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>
+
+<p-confirmDialog />

@@ -1,0 +1,4 @@
+/* Estilos comunes de listado viven en styles.css (.page, .table-card, etc.). */
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.6rem 1rem;
+}

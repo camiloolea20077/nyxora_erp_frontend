@@ -1,0 +1,33 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-lock"></i></span>
+      <div>
+        <h1 class="head-title">Permisos</h1>
+        <p class="head-sub">Catálogo global (solo lectura). Se asignan desde Roles.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="table-card">
+    <p-table [value]="rows()" [loading]="loading()" [paginator]="true" [rows]="15" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 5rem">ID</th>
+          <th style="width: 22rem">Código</th>
+          <th>Descripción</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.id }}</td>
+          <td class="nx-mono">{{ row.code }}</td>
+          <td>{{ row.description }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="3" class="empty-row">Sin permisos</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

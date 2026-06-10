@@ -1,0 +1,49 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar parámetro' : 'Nuevo parámetro'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="key">Clave</label>
+      <input pInputText id="key" formControlName="key" class="w-full" [class.ng-invalid]="isInvalid('key')" />
+      @if (isInvalid('key')) {
+        <small class="error">La clave es obligatoria</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="dataType">Tipo de dato</label>
+      <p-select
+        inputId="dataType"
+        formControlName="dataType"
+        [options]="tipos"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label for="value">Valor</label>
+      <input pInputText id="value" formControlName="value" class="w-full" [class.ng-invalid]="isInvalid('value')" />
+      @if (isInvalid('value')) {
+        <small class="error">El valor es obligatorio</small>
+      }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

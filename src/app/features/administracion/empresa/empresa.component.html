@@ -1,0 +1,188 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-building-columns"></i></span>
+      <div>
+        <h1 class="head-title">Mi empresa</h1>
+        <p class="head-sub">Datos generales, fiscales y de contacto</p>
+      </div>
+    </div>
+    <p-button label="Guardar" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </header>
+
+  <form [formGroup]="frm" class="emp-form">
+    <!-- Identificación -->
+    <section class="card">
+      <h2 class="card-title">Identificación</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="nit">NIT</label>
+          <input pInputText id="nit" formControlName="nit" [class.ng-invalid]="isInvalid('nit')" />
+          @if (isInvalid('nit')) { <small class="error">El NIT es obligatorio</small> }
+        </div>
+        <div class="field sm">
+          <label for="dv">DV</label>
+          <p-inputNumber inputId="dv" formControlName="digitoVerificacion" [useGrouping]="false" [min]="0" [max]="9" />
+        </div>
+        <div class="field">
+          <label for="razonSocial">Razón social</label>
+          <input pInputText id="razonSocial" formControlName="razonSocial" [class.ng-invalid]="isInvalid('razonSocial')" />
+          @if (isInvalid('razonSocial')) { <small class="error">La razón social es obligatoria</small> }
+        </div>
+        <div class="field">
+          <label for="nombreComercial">Nombre comercial</label>
+          <input pInputText id="nombreComercial" formControlName="nombreComercial" />
+        </div>
+        <div class="field">
+          <label for="codigo">Código</label>
+          <input pInputText id="codigo" formControlName="codigo" />
+        </div>
+        <div class="field">
+          <label for="tipoPersona">Tipo de persona</label>
+          <p-select inputId="tipoPersona" formControlName="tipoPersona" [options]="tiposPersona" optionLabel="label" optionValue="value" />
+        </div>
+        <div class="field">
+          <label for="representanteLegal">Representante legal</label>
+          <input pInputText id="representanteLegal" formControlName="representanteLegal" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Fiscal -->
+    <section class="card">
+      <h2 class="card-title">Información fiscal</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="regimenTributario">Régimen tributario</label>
+          <input pInputText id="regimenTributario" formControlName="regimenTributario" />
+        </div>
+        <div class="field">
+          <label for="responsabilidadFiscal">Responsabilidad fiscal</label>
+          <input pInputText id="responsabilidadFiscal" formControlName="responsabilidadFiscal" />
+        </div>
+        <div class="field">
+          <label for="sector">Sector</label>
+          <input pInputText id="sector" formControlName="sector" />
+        </div>
+        <div class="field">
+          <label for="tipoContribuyenteId">Tipo de contribuyente</label>
+          <p-select
+            inputId="tipoContribuyenteId"
+            formControlName="tipoContribuyenteId"
+            [options]="tiposContribuyente()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="actividadEconomicaId">Actividad económica</label>
+          <p-select
+            inputId="actividadEconomicaId"
+            formControlName="actividadEconomicaId"
+            [options]="actividades()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="card">
+      <h2 class="card-title">Contacto</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="email">Email</label>
+          <input pInputText id="email" type="email" formControlName="email" />
+        </div>
+        <div class="field">
+          <label for="telefono">Teléfono</label>
+          <input pInputText id="telefono" formControlName="telefono" />
+        </div>
+        <div class="field">
+          <label for="celular">Celular</label>
+          <input pInputText id="celular" formControlName="celular" />
+        </div>
+        <div class="field">
+          <label for="sitioWeb">Sitio web</label>
+          <input pInputText id="sitioWeb" formControlName="sitioWeb" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Ubicación -->
+    <section class="card">
+      <h2 class="card-title">Ubicación</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="paisId">País</label>
+          <p-select
+            inputId="paisId"
+            [ngModel]="selectedPaisId()"
+            (ngModelChange)="onPaisChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="paises()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="Selecciona país…"
+          />
+        </div>
+        <div class="field">
+          <label for="departamentoId">Departamento</label>
+          <p-select
+            inputId="departamentoId"
+            [ngModel]="selectedDepartamentoId()"
+            (ngModelChange)="onDepartamentoChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="departamentos()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            [disabled]="!selectedPaisId()"
+            placeholder="Selecciona departamento…"
+          />
+        </div>
+        <div class="field">
+          <label for="municipioId">Municipio</label>
+          <p-select
+            inputId="municipioId"
+            formControlName="municipioId"
+            [options]="municipios()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            [disabled]="!selectedDepartamentoId()"
+            placeholder="Selecciona municipio…"
+          />
+        </div>
+        <div class="field">
+          <label for="direccion">Dirección</label>
+          <input pInputText id="direccion" formControlName="direccion" />
+        </div>
+        <div class="field">
+          <label for="codigoPostal">Código postal</label>
+          <input pInputText id="codigoPostal" formControlName="codigoPostal" />
+        </div>
+        <div class="field-check">
+          <p-checkbox formControlName="active" [binary]="true" inputId="active" />
+          <label for="active">Empresa activa</label>
+        </div>
+      </div>
+    </section>
+  </form>
+</div>

@@ -1,0 +1,78 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-chart-bar"></i></span>
+      <div>
+        <h1 class="head-title">Existencias</h1>
+        <p class="head-sub">Saldos de inventario y kardex</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <h3 class="card-title">Saldos por bodega</h3>
+    <div class="toolbar">
+      <p-select [(ngModel)]="bodegaId" [options]="bodegas()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Bodega…" styleClass="sel" />
+      <p-select [(ngModel)]="productoFiltroId" [options]="productos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Producto (opcional)…" styleClass="sel-lg" />
+      <p-button label="Consultar" icon="pi pi-search" (onClick)="consultar()" />
+      <p-button label="Recalcular" icon="pi pi-refresh" severity="secondary" [outlined]="true" [loading]="recalculando()" (onClick)="recalcular()" />
+    </div>
+
+    <p-table [value]="saldos()" [loading]="loadingSaldos()" [paginator]="true" [rows]="20" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Producto</th>
+          <th class="r">Cantidad</th>
+          <th class="r">Costo promedio</th>
+          <th class="r">Valor total</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ nombreProducto(row.productoId) }}</td>
+          <td class="r nx-mono">{{ row.cantidad | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.costoPromedio | number: '1.2-2' }}</td>
+          <td class="r nx-mono b">{{ row.valorTotal | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" class="empty-row">Selecciona una bodega y consulta</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Kardex de producto</h3>
+    <div class="toolbar">
+      <p-select [(ngModel)]="kardexProductoId" [options]="productos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Producto…" styleClass="sel-lg" />
+      <p-select [(ngModel)]="kardexBodegaId" [options]="bodegas()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Bodega (opcional)…" styleClass="sel" />
+      <p-button label="Ver kardex" icon="pi pi-list" (onClick)="verKardex()" />
+    </div>
+
+    <p-table [value]="kardex()" [loading]="loadingKardex()" [paginator]="true" [rows]="20" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 9rem">Fecha</th>
+          <th style="width: 8rem">Tipo</th>
+          <th>Descripción</th>
+          <th class="r">Cantidad</th>
+          <th class="r">Costo unit.</th>
+          <th class="r">Saldo</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.fecha }}</td>
+          <td>{{ row.tipo }}</td>
+          <td>{{ row.descripcion }}</td>
+          <td class="r nx-mono">{{ row.cantidad | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.costoUnitario | number: '1.2-2' }}</td>
+          <td class="r nx-mono b">{{ row.saldoCorriente | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">Selecciona un producto y consulta</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+.head-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.sat-tabs {
+  padding: 0.5rem 0.75rem 1rem;
+}
+.sat-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--nx-muted);
+  font-size: 0.85rem;
+}
+/* separación entre las tarjetas de satélites */
+app-contactos-tercero,
+app-direcciones-tercero,
+app-cuentas-tercero {
+  display: block;
+}
+.ter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding-top: 0.25rem;
+}
+.sec {
+  border: 1px solid var(--nx-border);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+.sec-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--nx-text);
+  margin: 0 0 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem 1.1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field.sm {
+  max-width: 90px;
+}
+.field.col-2 {
+  grid-column: span 2;
+}
+.field.col-3 {
+  grid-column: 1 / -1;
+}
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.72rem;
+}
+.checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem 1.1rem;
+  margin-top: 1rem;
+}
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.chk label {
+  font-size: 0.82rem;
+  color: var(--nx-text);
+}
+.nx-textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  resize: vertical;
+  color: var(--nx-text);
+}
+.nx-textarea:focus {
+  outline: none;
+  border-color: var(--nx-primary);
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-multiselect,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .grid,
+  .checks {
+    grid-template-columns: 1fr 1fr;
+  }
+  .field.col-2 {
+    grid-column: span 2;
+  }
+}

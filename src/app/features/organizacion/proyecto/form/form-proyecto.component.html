@@ -1,0 +1,41 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar proyecto' : 'Nuevo proyecto'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="p-codigo">Código *</label>
+        <input pInputText id="p-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="p-nombre">Nombre *</label>
+        <input pInputText id="p-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="p-ini">Fecha inicio</label>
+        <input pInputText id="p-ini" type="date" formControlName="fechaInicio" />
+      </div>
+      <div class="field">
+        <label for="p-fin">Fecha final</label>
+        <input pInputText id="p-fin" type="date" formControlName="fechaFinal" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="p-desc">Descripción</label>
+      <input pInputText id="p-desc" formControlName="descripcion" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,25 @@
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.9rem;
+}
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}
+.prov-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.prov-pick .picked {
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--nx-text);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  background: #f8fafc;
+}
+.prov-pick .picked.empty {
+  color: var(--nx-muted);
+}

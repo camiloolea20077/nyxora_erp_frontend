@@ -1,0 +1,51 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar categoría' : 'Nueva categoría'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '540px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="c-padre">Categoría padre</label>
+      <p-select
+        inputId="c-padre"
+        formControlName="categoriaPadreId"
+        [options]="categorias()"
+        optionLabel="nombre"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombre,codigo"
+        [showClear]="true"
+        placeholder="(Raíz)"
+      />
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label for="c-codigo">Código *</label>
+        <input pInputText id="c-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="c-nombre">Nombre *</label>
+        <input pInputText id="c-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="c-tipo">Tipo de producto</label>
+        <p-select inputId="c-tipo" formControlName="tipoProducto" [options]="tiposProducto" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="c-costeo">Método de costeo</label>
+        <p-select inputId="c-costeo" formControlName="metodoCosteo" [options]="metodosCosteo" optionLabel="label" optionValue="value" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

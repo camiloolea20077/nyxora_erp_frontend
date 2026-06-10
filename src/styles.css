@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+@import 'primeicons/primeicons.css';
+
+/* ── Design tokens Nyxora (paleta azul/navy profesional, sin morados) ── */
+:root {
+  --nx-primary: #2563eb; /* blue-600 */
+  --nx-primary-hover: #1d4ed8; /* blue-700 */
+  --nx-primary-soft: rgba(37, 99, 235, 0.1);
+  --nx-ink: #0f172a; /* slate-900 (panel oscuro) */
+  --nx-ink-2: #1e293b; /* slate-800 */
+  --nx-brand-panel: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+  --nx-bg: #f1f5f9; /* slate-100 */
+  --nx-surface: #ffffff;
+  --nx-border: #e2e8f0; /* slate-200 */
+  --nx-text: #0f172a;
+  --nx-muted: #64748b; /* slate-500 */
+  --nx-success: #10b981;
+  --nx-warning: #f59e0b;
+  --nx-danger: #ef4444;
+  --sidebar-w: 260px;
+  --sidebar-collapsed: 72px;
+}
+
+/* Tamaño base del proyecto: 1rem = 12.8px (escala toda la UI, incl. PrimeNG) */
+html {
+  font-size: 12.8px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  background: var(--nx-bg);
+  color: var(--nx-text);
+}
+
+/* Helpers reutilizables */
+.nx-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+.text-center {
+  text-align: center;
+}
+.w-full {
+  width: 100%;
+}
+
+/* ── Utilidades de página/listado (reusadas por todos los módulos CRUD) ── */
+.page {
+  width: 100%;
+}
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.page-head .head-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.page-head .head-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--nx-primary-soft);
+  display: grid;
+  place-items: center;
+}
+.page-head .head-icon i {
+  font-size: 1.15rem;
+  color: var(--nx-primary);
+}
+.page-head .head-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--nx-text);
+  margin: 0;
+}
+.page-head .head-sub {
+  font-size: 0.8rem;
+  color: var(--nx-muted);
+  margin: 0;
+}
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.toolbar .search {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 1;
+  max-width: 360px;
+}
+.toolbar .search i {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--nx-muted);
+  font-size: 0.85rem;
+}
+.toolbar .search input {
+  width: 100%;
+  padding-left: 2.1rem;
+}
+.table-card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Todas las tablas muestran los datos en MAYÚSCULA (solo visual; el dato no cambia) */
+.p-datatable .p-datatable-tbody > tr > td {
+  text-transform: uppercase;
+}
+
+/* Listas (select/multiselect): opciones y etiqueta seleccionada en MAYÚSCULA */
+.p-select-label,
+.p-select-option,
+.p-multiselect-label,
+.p-multiselect-option {
+  text-transform: uppercase;
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  font-size: 0.85rem;
+  padding: 2rem !important;
+}
+
+/* ── Satélites (sub-CRUD dentro de una página/tab, p. ej. contactos/direcciones del tercero) ── */
+.sat {
+  padding: 0.5rem 0;
+}
+.sat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.sat-head h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--nx-text);
+  margin: 0;
+}
+.sat-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 0.4rem;
+}
+.sat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.sat-dialog-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.sat-dialog-form .field.col-2 {
+  grid-column: 1 / -1;
+}
+.sat-dialog-form .field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.sat-dialog-form .field .error {
+  color: var(--nx-danger);
+  font-size: 0.72rem;
+}
+.sat-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sat-check label {
+  font-size: 0.82rem;
+}

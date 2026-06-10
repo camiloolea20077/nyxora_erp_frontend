@@ -1,0 +1,52 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar rol' : 'Nuevo rol'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="name">Nombre del rol</label>
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        class="w-full"
+        [class.ng-invalid]="invalidName"
+      />
+      @if (invalidName) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="permisos">Permisos</label>
+      <p-multiSelect
+        inputId="permisos"
+        formControlName="permisoIds"
+        [options]="permisos()"
+        optionLabel="code"
+        optionValue="id"
+        [filter]="true"
+        filterBy="code,description"
+        display="chip"
+        appendTo="body"
+        placeholder="Selecciona permisos"
+        styleClass="w-full"
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

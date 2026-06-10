@@ -1,0 +1,40 @@
+@if (recepcion(); as r) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-inbox"></i></span>
+        <div>
+          <h1 class="head-title">Recepción {{ r.numero }}</h1>
+          <p class="head-sub">{{ r.fecha }} · OC #{{ r.ordenCompraId }}</p>
+        </div>
+      </div>
+      <p-tag [value]="r.estado" />
+    </header>
+
+    <div class="card">
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="r">Cantidad recibida</th>
+            <th class="r">Costo unitario</th>
+            <th class="r">Lote</th>
+            <th class="r">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (l of r.lineas; track l.id) {
+            <tr>
+              <td>{{ producto(l.productoId) }}</td>
+              <td class="r nx-mono">{{ l.cantidadRecibida | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.costoUnitario | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.loteId ? '#' + l.loteId : '' }}</td>
+              <td class="r nx-mono">{{ l.ubicacionId ? '#' + l.ubicacionId : '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

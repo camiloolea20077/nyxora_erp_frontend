@@ -1,0 +1,69 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Variantes</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>SKU / PLU</th>
+        <th>Código de barra</th>
+        <th style="width: 10rem">Precio adicional</th>
+        <th style="width: 10rem">Costo</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td class="nx-mono">{{ row.skuPlu }}</td>
+        <td class="nx-mono">{{ row.codigoBarra }}</td>
+        <td class="nx-mono">{{ row.precioAdicional }}</td>
+        <td class="nx-mono">{{ row.costo }}</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5" class="empty-row">Sin variantes</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar variante' : 'Nueva variante'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field">
+        <label for="v-sku">SKU / PLU</label>
+        <input pInputText id="v-sku" formControlName="skuPlu" />
+      </div>
+      <div class="field">
+        <label for="v-barra">Código de barra</label>
+        <input pInputText id="v-barra" formControlName="codigoBarra" />
+      </div>
+      <div class="field">
+        <label for="v-precio">Precio adicional</label>
+        <p-inputNumber inputId="v-precio" formControlName="precioAdicional" [minFractionDigits]="0" [maxFractionDigits]="4" />
+      </div>
+      <div class="field">
+        <label for="v-costo">Costo</label>
+        <p-inputNumber inputId="v-costo" formControlName="costo" [minFractionDigits]="0" [maxFractionDigits]="4" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

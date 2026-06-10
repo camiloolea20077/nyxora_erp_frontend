@@ -1,0 +1,59 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar centro de costo' : 'Nuevo centro de costo'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '580px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="cc-codigo">Código *</label>
+        <input pInputText id="cc-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="cc-nombre">Nombre *</label>
+        <input pInputText id="cc-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="cc-sede">Sede</label>
+        <p-select inputId="cc-sede" formControlName="sedeId" [options]="sedes()" optionLabel="name" optionValue="id" [showClear]="true" placeholder="(Sin sede)" />
+      </div>
+      <div class="field">
+        <label for="cc-padre">Centro de costo padre</label>
+        <p-select inputId="cc-padre" formControlName="centroCostoPadreId" [options]="centros()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Raíz)" />
+      </div>
+      <div class="field">
+        <label for="cc-tipo">Tipo</label>
+        <input pInputText id="cc-tipo" formControlName="tipoCentroCosto" />
+      </div>
+      <div class="field">
+        <label for="cc-clase">Clase</label>
+        <input pInputText id="cc-clase" formControlName="claseCentroCosto" />
+      </div>
+      <div class="field col-2">
+        <label for="cc-dir">Dirección</label>
+        <input pInputText id="cc-dir" formControlName="direccion" />
+      </div>
+    </div>
+    <div class="checks">
+      <div class="field-check">
+        <p-checkbox formControlName="esObservacion" [binary]="true" inputId="cc-obs" />
+        <label for="cc-obs">Es de observación</label>
+      </div>
+      <div class="field-check">
+        <p-checkbox formControlName="manejaPlanFinanciero" [binary]="true" inputId="cc-pf" />
+        <label for="cc-pf">Maneja plan financiero</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

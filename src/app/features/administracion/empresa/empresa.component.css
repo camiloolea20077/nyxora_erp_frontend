@@ -1,0 +1,87 @@
+.emp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--nx-text);
+  margin: 0 0 1.25rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.25rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field.sm {
+  max-width: 110px;
+}
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.75rem;
+}
+.cat-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cat-pick .picked {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--nx-text);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  background: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cat-pick .picked.empty {
+  color: var(--nx-muted);
+}
+.field-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: end;
+}
+.field-check label {
+  font-size: 0.85rem;
+  color: var(--nx-text);
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}
+
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,45 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar recurso' : 'Nuevo recurso'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="r-codigo">Código *</label>
+        <input pInputText id="r-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="r-tipo">Tipo de recurso</label>
+        <input pInputText id="r-tipo" formControlName="tipoRecurso" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="r-nombre">Nombre *</label>
+      <input pInputText id="r-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+      @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+    </div>
+    <div class="field">
+      <label for="r-driver">Driver</label>
+      <input pInputText id="r-driver" formControlName="driver" />
+    </div>
+    <div class="field">
+      <label for="r-desc">Descripción</label>
+      <input pInputText id="r-desc" formControlName="descripcion" />
+    </div>
+    <div class="field-check">
+      <p-checkbox formControlName="costoAdicional" [binary]="true" inputId="r-costo" />
+      <label for="r-costo">Es costo adicional</label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

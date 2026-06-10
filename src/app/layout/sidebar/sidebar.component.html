@@ -1,0 +1,35 @@
+<aside class="sidebar">
+  <div class="side-logo">
+    <img src="/assets/icons/nyxora-logo.png" alt="Nyxora ERP" class="logo-img" />
+  </div>
+
+  <nav class="side-nav">
+    <!-- Dashboard (fijo, fuera del acordeón) -->
+    <a class="nav-item solo" [routerLink]="home.route" [class.active]="dashboardActive()">
+      <i [class]="home.icon"></i>
+      <span class="nav-text">{{ home.label }}</span>
+    </a>
+
+    <!-- Grupos colapsables -->
+    @for (group of menu; track group.label) {
+      <div class="nav-group" [class.open]="isOpen(group.label)">
+        <button type="button" class="group-head" (click)="toggle(group.label)">
+          <i class="g-icon" [class]="group.icon"></i>
+          <span class="g-label">{{ group.label }}</span>
+          <i class="g-caret pi pi-chevron-down"></i>
+        </button>
+
+        @if (isOpen(group.label)) {
+          <div class="group-items">
+            @for (item of group.items; track item.route) {
+              <a class="nav-item" [routerLink]="item.route" [class.active]="isActive(item.route)">
+                <i [class]="item.icon"></i>
+                <span class="nav-text">{{ item.label }}</span>
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+</aside>

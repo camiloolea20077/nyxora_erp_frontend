@@ -1,0 +1,85 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar usuario' : 'Nuevo usuario'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    @if (!isEdit()) {
+      <div class="field">
+        <label>Tercero (persona)</label>
+        <div class="tercero-pick">
+          <span class="picked" [class.empty]="!selectedTercero()">
+            @if (selectedTercero(); as t) {
+              {{ t.nombre }} · <span class="nx-mono">{{ t.numeroDocumento }}</span>
+            } @else {
+              Ningún tercero seleccionado
+            }
+          </span>
+          <p-button label="Buscar" icon="pi pi-search" [outlined]="true" (onClick)="openSelector()" />
+        </div>
+        @if (isInvalid('terceroId')) {
+          <small class="error">Selecciona un tercero</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="username">Usuario</label>
+        <input pInputText id="username" formControlName="username" class="w-full" [class.ng-invalid]="isInvalid('username')" />
+        @if (isInvalid('username')) {
+          <small class="error">El usuario es obligatorio</small>
+        }
+      </div>
+    }
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input pInputText id="email" type="email" formControlName="email" class="w-full" [class.ng-invalid]="isInvalid('email')" />
+      @if (isInvalid('email')) {
+        <small class="error">Ingresa un email válido</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="password">{{ isEdit() ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</label>
+      <p-password
+        inputId="password"
+        formControlName="password"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="w-full"
+        [inputStyle]="{ width: '100%' }"
+      />
+      @if (isInvalid('password')) {
+        <small class="error">Mínimo 6 caracteres</small>
+      }
+    </div>
+
+    @if (isEdit()) {
+      <div class="field-check">
+        <p-checkbox formControlName="active" [binary]="true" inputId="active" />
+        <label for="active">Activo</label>
+      </div>
+    }
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar persona (tercero)"
+  (selected)="onTerceroSelected($event)"
+/>

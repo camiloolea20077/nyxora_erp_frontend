@@ -1,0 +1,75 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-inbox"></i></span>
+      <div>
+        <h1 class="head-title">Nueva recepción</h1>
+        <p class="head-sub">Recibir mercancía de una orden de compra</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field col-2">
+        <label for="rc-oc">Orden de compra *</label>
+        <p-select inputId="rc-oc" formControlName="ordenCompraId" [options]="ordenes()" optionLabel="numero" optionValue="id" [filter]="true" filterBy="numero" placeholder="Selecciona…" (onChange)="onOrdenChange($event.value)" />
+      </div>
+      <div class="field">
+        <label for="rc-bodega">Bodega *</label>
+        <p-select inputId="rc-bodega" formControlName="bodegaId" [options]="bodegas()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Selecciona…" />
+      </div>
+      <div class="field">
+        <label for="rc-tipo">Tipo de documento *</label>
+        <p-select inputId="rc-tipo" formControlName="tipoDocumentoId" [options]="tiposDocumento()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Selecciona…" />
+      </div>
+      <div class="field">
+        <label for="rc-numero">Número</label>
+        <input pInputText id="rc-numero" formControlName="numero" placeholder="(automático)" />
+      </div>
+      <div class="field">
+        <label for="rc-fecha">Fecha *</label>
+        <input pInputText id="rc-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field col-3">
+        <label for="rc-obs">Observaciones</label>
+        <input pInputText id="rc-obs" formControlName="observaciones" />
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 class="lines-title">Líneas a recibir</h3>
+    <table class="lines">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th style="width: 9rem" class="r">Pendiente</th>
+          <th style="width: 11rem" class="r">Recibir</th>
+          <th style="width: 12rem" class="r">Costo unitario</th>
+          <th style="width: 16%">Lote</th>
+          <th style="width: 16%">Ubicación</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (linea of lineas(); track linea._id) {
+          <tr>
+            <td>{{ linea.productoNombre }}</td>
+            <td class="r nx-mono">{{ linea.cantidadPendiente }}</td>
+            <td><p-inputNumber [(ngModel)]="linea.cantidadRecibida" [ngModelOptions]="{ standalone: true }" [min]="0" [max]="linea.cantidadPendiente" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td><p-inputNumber [(ngModel)]="linea.costoUnitario" [ngModelOptions]="{ standalone: true }" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td><p-select [(ngModel)]="linea.loteId" [ngModelOptions]="{ standalone: true }" [options]="lotes()" optionLabel="codigo" optionValue="id" [filter]="true" filterBy="codigo,nombre" [showClear]="true" placeholder="(Opcional)" appendTo="body" /></td>
+            <td><p-select [(ngModel)]="linea.ubicacionId" [ngModelOptions]="{ standalone: true }" [options]="ubicaciones()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Opcional)" appendTo="body" /></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="empty">Selecciona una orden de compra para ver las líneas pendientes</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

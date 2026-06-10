@@ -1,0 +1,51 @@
+<p-dialog
+  header="Roles del usuario"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="close()"
+>
+  <p class="subtitle">Asignar o quitar un rol a <b>{{ usuarioNombre() }}</b> en una sede.</p>
+
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="rolId">Rol</label>
+      <p-select
+        inputId="rolId"
+        formControlName="rolId"
+        [options]="roles()"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Selecciona un rol"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label for="sedeId">Sede</label>
+      <p-select
+        inputId="sedeId"
+        formControlName="sedeId"
+        [options]="sedes()"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="code,name"
+        placeholder="Selecciona una sede"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Quitar" icon="pi pi-minus" severity="danger" [outlined]="true" [loading]="loading()" (onClick)="quitar()" />
+    <p-button label="Asignar" icon="pi pi-plus" [loading]="loading()" (onClick)="asignar()" />
+  </ng-template>
+</p-dialog>

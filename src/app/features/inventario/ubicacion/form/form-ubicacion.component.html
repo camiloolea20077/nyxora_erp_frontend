@@ -1,0 +1,50 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar ubicación' : 'Nueva ubicación'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '580px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="u-bodega">Bodega *</label>
+        <p-select inputId="u-bodega" formControlName="bodegaId" [options]="bodegas()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Selecciona…" />
+        @if (isInvalid('bodegaId')) { <small class="error">Obligatoria</small> }
+      </div>
+      <div class="field">
+        <label for="u-padre">Ubicación padre</label>
+        <p-select inputId="u-padre" formControlName="ubicacionPadreId" [options]="ubicaciones()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Raíz)" />
+      </div>
+      <div class="field">
+        <label for="u-codigo">Código *</label>
+        <input pInputText id="u-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="u-nombre">Nombre *</label>
+        <input pInputText id="u-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="u-pasillo">Pasillo</label>
+        <p-inputNumber inputId="u-pasillo" formControlName="pasillo" [useGrouping]="false" />
+      </div>
+      <div class="field">
+        <label for="u-altura">Altura</label>
+        <p-inputNumber inputId="u-altura" formControlName="altura" [useGrouping]="false" />
+      </div>
+      <div class="field">
+        <label for="u-posicion">Posición</label>
+        <p-inputNumber inputId="u-posicion" formControlName="posicion" [useGrouping]="false" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

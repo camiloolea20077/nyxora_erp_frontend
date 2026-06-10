@@ -1,0 +1,70 @@
+<p-dialog
+  [header]="header()"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '760px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <!-- Filtros avanzados -->
+  <div class="filters">
+    <div class="f">
+      <label>Nombre / documento</label>
+      <input pInputText type="text" [(ngModel)]="search" (keyup.enter)="buscar()" placeholder="Buscar…" />
+    </div>
+    <div class="f">
+      <label>N.º documento</label>
+      <input pInputText type="text" [(ngModel)]="numeroDocumento" (keyup.enter)="buscar()" placeholder="Exacto/inicio" />
+    </div>
+    <div class="f">
+      <label>Tipo de persona</label>
+      <p-select [(ngModel)]="tipoPersona" [options]="personas" optionLabel="label" optionValue="value" appendTo="body" />
+    </div>
+    <div class="f-actions">
+      <p-button label="Buscar" icon="pi pi-search" (onClick)="buscar()" />
+      <p-button label="Limpiar" icon="pi pi-filter-slash" severity="secondary" [text]="true" (onClick)="limpiar()" />
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 11rem">Documento</th>
+          <th>Nombre</th>
+          <th style="width: 7rem">Tipo</th>
+          <th style="width: 6rem"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr class="row-pick" (click)="seleccionar(row)">
+          <td class="nx-mono">{{ row.numeroDocumento }}</td>
+          <td>{{ row.nombre }}</td>
+          <td><p-tag [value]="row.tipoPersona" severity="secondary" /></td>
+          <td>
+            <button pButton icon="pi pi-check" [text]="true" (click)="$event.stopPropagation(); seleccionar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" class="empty-row">Sin terceros para los filtros</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cerrar" severity="secondary" [text]="true" (onClick)="close()" />
+  </ng-template>
+</p-dialog>

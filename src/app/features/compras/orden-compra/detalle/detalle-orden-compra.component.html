@@ -1,0 +1,59 @@
+@if (orden(); as o) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-shopping-cart"></i></span>
+        <div>
+          <h1 class="head-title">Orden {{ o.numero }}</h1>
+          <p class="head-sub">{{ o.fecha }} · {{ proveedorNombre() }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="o.estado" />
+        @if (o.estado === 'borrador') {
+          <p-button label="Aprobar" icon="pi pi-check" severity="success" (onClick)="aprobar()" />
+        }
+        @if (o.estado === 'aprobada') {
+          <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th class="r">Cantidad</th>
+            <th class="r">Vr. unitario</th>
+            <th class="r">Total</th>
+            <th class="r">Recibida</th>
+            <th class="r">Pendiente</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (l of o.lineas; track l.id) {
+            <tr>
+              <td>{{ producto(l.productoId) }}</td>
+              <td>{{ l.descripcion }}</td>
+              <td class="r nx-mono">{{ l.cantidad | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.valorUnitario | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.total | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.cantidadRecibida | number: '1.2-2' }}</td>
+              <td class="r nx-mono b">{{ l.cantidadPendiente | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="totales">
+        <div><span>Subtotal</span><b class="nx-mono">{{ o.subtotal | number: '1.2-2' }}</b></div>
+        <div><span>Descuento</span><b class="nx-mono">{{ o.descuento | number: '1.2-2' }}</b></div>
+        <div><span>Impuestos</span><b class="nx-mono">{{ o.impuestos | number: '1.2-2' }}</b></div>
+        <div class="grand"><span>Total</span><b class="nx-mono">{{ o.total | number: '1.2-2' }}</b></div>
+      </div>
+    </div>
+  </div>
+}

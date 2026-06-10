@@ -1,0 +1,54 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-wallet"></i></span>
+      <div>
+        <h1 class="head-title">Saldos contables</h1>
+        <p class="head-sub">Proyección de saldos por periodo</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <p-select
+      [(ngModel)]="periodoId"
+      [options]="periodoOpts()"
+      optionLabel="label"
+      optionValue="id"
+      placeholder="Selecciona periodo…"
+      styleClass="per-select"
+    />
+    <p-button label="Consultar" icon="pi pi-search" (onClick)="consultar()" />
+    <p-button label="Recalcular" icon="pi pi-refresh" severity="secondary" [outlined]="true" [loading]="recalculando()" (onClick)="recalcular()" />
+  </div>
+
+  <div class="table-card">
+    <p-table [value]="saldos()" [loading]="loading()" [paginator]="true" [rows]="20" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cuenta</th>
+          <th class="r">Saldo ant. débito</th>
+          <th class="r">Saldo ant. crédito</th>
+          <th class="r">Débito periodo</th>
+          <th class="r">Crédito periodo</th>
+          <th class="r">Saldo final débito</th>
+          <th class="r">Saldo final crédito</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ nombreCuenta(row.cuentaId) }}</td>
+          <td class="r nx-mono">{{ row.saldoDebitoAnterior | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.saldoCreditoAnterior | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.debitoPeriodo | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.creditoPeriodo | number: '1.2-2' }}</td>
+          <td class="r nx-mono b">{{ row.saldoDebitoFinal | number: '1.2-2' }}</td>
+          <td class="r nx-mono b">{{ row.saldoCreditoFinal | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="7" class="empty-row">Selecciona un periodo y consulta</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar sede' : 'Nueva sede'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="code">Código</label>
+      <input pInputText id="code" formControlName="code" class="w-full" [class.ng-invalid]="isInvalid('code')" />
+      @if (isInvalid('code')) {
+        <small class="error">El código es obligatorio</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input pInputText id="name" formControlName="name" class="w-full" [class.ng-invalid]="isInvalid('name')" />
+      @if (isInvalid('name')) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

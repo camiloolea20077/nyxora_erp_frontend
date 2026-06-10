@@ -1,0 +1,138 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-sort-alt"></i></span>
+      <div>
+        <h1 class="head-title">Movimientos de inventario</h1>
+        <p class="head-sub">Registrar entrada, salida o ajuste</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="mov-form">
+      <div class="field">
+        <label for="mv-tipo">Tipo *</label>
+        <p-select
+          inputId="mv-tipo"
+          formControlName="tipo"
+          [options]="tipos"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+      <div class="field">
+        <label for="mv-bodega">Bodega *</label>
+        <p-select
+          inputId="mv-bodega"
+          formControlName="bodegaId"
+          [options]="bodegas()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          placeholder="Selecciona…"
+        />
+        @if (isInvalid('bodegaId')) {
+          <small class="error">Obligatoria</small>
+        }
+      </div>
+      <div class="field">
+        <label for="mv-ubic">Ubicación</label>
+        <p-select
+          inputId="mv-ubic"
+          formControlName="ubicacionId"
+          [options]="ubicaciones()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="mv-prod">Producto *</label>
+        <p-select
+          inputId="mv-prod"
+          formControlName="productoId"
+          [options]="productos()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          placeholder="Selecciona…"
+        />
+        @if (isInvalid('productoId')) {
+          <small class="error">Obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="mv-lote">Lote</label>
+        <p-select
+          inputId="mv-lote"
+          formControlName="loteId"
+          [options]="lotes()"
+          optionLabel="codigo"
+          optionValue="id"
+          [filter]="true"
+          filterBy="codigo,nombre"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
+      </div>
+      <div class="field">
+        <label for="mv-fecha">Fecha *</label>
+        <input pInputText id="mv-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field">
+        <label for="mv-cant">Cantidad *</label>
+        <p-inputNumber
+          inputId="mv-cant"
+          formControlName="cantidad"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="4"
+        />
+        @if (isInvalid('cantidad')) {
+          <small class="error">Mayor a 0</small>
+        }
+      </div>
+      <div class="field">
+        <label for="mv-costo">Costo unitario</label>
+        <p-inputNumber
+          inputId="mv-costo"
+          formControlName="costoUnitario"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="4"
+        />
+      </div>
+      <div class="field">
+        <label for="mv-cc">Centro de costo</label>
+        <p-select
+          inputId="mv-cc"
+          formControlName="centroCostoId"
+          [options]="centros()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="mv-desc">Descripción</label>
+        <input pInputText id="mv-desc" formControlName="descripcion" />
+      </div>
+
+      <div class="actions">
+        <p-button
+          label="Registrar movimiento"
+          icon="pi pi-check"
+          [loading]="loading()"
+          (onClick)="registrar()"
+        />
+      </div>
+    </form>
+  </div>
+</div>

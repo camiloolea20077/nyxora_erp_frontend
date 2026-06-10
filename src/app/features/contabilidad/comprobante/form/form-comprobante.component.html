@@ -1,0 +1,95 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-file-edit"></i></span>
+      <div>
+        <h1 class="head-title">Nuevo comprobante</h1>
+        <p class="head-sub">Asiento contable (partida doble)</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" [disabled]="!balanceado()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field">
+        <label for="cb-periodo">Periodo *</label>
+        <p-select inputId="cb-periodo" formControlName="periodoContableId" [options]="periodoOpts()" optionLabel="label" optionValue="id" placeholder="Selecciona…" />
+      </div>
+      <div class="field">
+        <label for="cb-tipo">Tipo de documento *</label>
+        <p-select inputId="cb-tipo" formControlName="tipoDocumentoId" [options]="tiposDocumento()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Selecciona…" />
+      </div>
+      <div class="field">
+        <label for="cb-numero">Número</label>
+        <input pInputText id="cb-numero" formControlName="numero" placeholder="(automático)" />
+      </div>
+      <div class="field">
+        <label for="cb-fecha">Fecha *</label>
+        <input pInputText id="cb-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field col-2">
+        <label for="cb-desc">Descripción</label>
+        <input pInputText id="cb-desc" formControlName="descripcion" />
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="lines-head">
+      <h3>Movimientos</h3>
+      <p-button label="Agregar línea" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregar()" />
+    </div>
+
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width: 26%">Cuenta</th>
+          <th style="width: 20%">Centro de costo</th>
+          <th>Descripción</th>
+          <th style="width: 13%" class="r">Débito</th>
+          <th style="width: 13%" class="r">Crédito</th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (linea of lineas(); track linea._id) {
+          <tr>
+            <td>
+              <p-select [(ngModel)]="linea.cuentaId" [ngModelOptions]="{ standalone: true }" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="Cuenta…" appendTo="body" />
+            </td>
+            <td>
+              <p-select [(ngModel)]="linea.centroCostoId" [ngModelOptions]="{ standalone: true }" [options]="centros()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Opcional)" appendTo="body" />
+            </td>
+            <td><input pInputText [(ngModel)]="linea.descripcion" [ngModelOptions]="{ standalone: true }" /></td>
+            <td><p-inputNumber [(ngModel)]="linea.debito" [ngModelOptions]="{ standalone: true }" (ngModelChange)="recalc()" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td><p-inputNumber [(ngModel)]="linea.credito" [ngModelOptions]="{ standalone: true }" (ngModelChange)="recalc()" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitar(linea._id)"></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="r b">Totales</td>
+          <td class="r b nx-mono">{{ totalDebito() | number: '1.2-2' }}</td>
+          <td class="r b nx-mono">{{ totalCredito() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="balance" [class.ok]="balanceado()" [class.bad]="!balanceado()">
+      @if (balanceado()) {
+        <i class="pi pi-check-circle"></i> Comprobante balanceado
+      } @else {
+        <i class="pi pi-exclamation-triangle"></i> Diferencia: {{ diferencia() | number: '1.2-2' }}
+      }
+    </div>
+  </div>
+</div>

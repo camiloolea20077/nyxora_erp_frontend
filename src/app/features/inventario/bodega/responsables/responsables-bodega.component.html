@@ -1,0 +1,52 @@
+<p-dialog
+  header="Responsables de la bodega"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="subtitle">Terceros responsables de <b>{{ bodegaNombre() }}</b>.</p>
+
+  <div class="add-bar">
+    <div class="chk">
+      <p-checkbox [(ngModel)]="predeterminado" [binary]="true" inputId="rb-pred" />
+      <label for="rb-pred">Marcar como predeterminado</label>
+    </div>
+    <p-button label="Asignar tercero" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="abrirSelector()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Tercero</th>
+        <th style="width: 8rem">Predeterminado</th>
+        <th style="width: 5rem" class="text-center"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ nombreTercero(row.terceroId) }}</td>
+        <td>@if (row.predeterminado) { <p-tag value="Sí" severity="success" /> }</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="3" class="empty-row">Sin responsables</td></tr>
+    </ng-template>
+  </p-table>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cerrar" severity="secondary" [text]="true" (onClick)="close()" />
+  </ng-template>
+</p-dialog>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar responsable"
+  (selected)="onTerceroSelected($event)"
+/>

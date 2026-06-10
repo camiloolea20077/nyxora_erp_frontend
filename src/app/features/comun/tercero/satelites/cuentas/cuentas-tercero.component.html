@@ -1,0 +1,85 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Cuentas bancarias</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Banco</th>
+        <th style="width: 10rem">Tipo</th>
+        <th>Número</th>
+        <th style="width: 6rem">Principal</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ nombreBanco(row.bancoId) }}</td>
+        <td>{{ nombreTipoCuenta(row.tipoCuentaBancariaId) }}</td>
+        <td class="nx-mono">{{ row.numeroCuenta }}</td>
+        <td>@if (row.principal) { <p-tag value="Sí" severity="success" /> }</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5" class="empty-row">Sin cuentas</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar cuenta' : 'Nueva cuenta'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field">
+        <label for="cb-banco">Banco *</label>
+        <p-select
+          inputId="cb-banco"
+          formControlName="bancoId"
+          [options]="bancos()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          placeholder="Selecciona…"
+        />
+      </div>
+      <div class="field">
+        <label for="cb-tipo">Tipo de cuenta *</label>
+        <p-select
+          inputId="cb-tipo"
+          formControlName="tipoCuentaBancariaId"
+          [options]="tiposCuenta()"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Selecciona…"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="cb-numero">Número de cuenta *</label>
+        <input pInputText id="cb-numero" formControlName="numeroCuenta" />
+      </div>
+      <div class="sat-check">
+        <p-checkbox formControlName="principal" [binary]="true" inputId="cb-principal" />
+        <label for="cb-principal">Cuenta principal</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

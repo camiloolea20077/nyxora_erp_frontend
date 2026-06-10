@@ -1,0 +1,89 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Direcciones</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 9rem">Tipo</th>
+        <th>Dirección</th>
+        <th>Municipio</th>
+        <th>Teléfono</th>
+        <th style="width: 6rem">Principal</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.tipo }}</td>
+        <td>{{ row.direccion }}</td>
+        <td>{{ nombreMunicipio(row.municipioId) }}</td>
+        <td>{{ row.telefono }}</td>
+        <td>@if (row.principal) { <p-tag value="Sí" severity="success" /> }</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="6" class="empty-row">Sin direcciones</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar dirección' : 'Nueva dirección'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field">
+        <label for="d-tipo">Tipo</label>
+        <p-select inputId="d-tipo" formControlName="tipo" [options]="tipos" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="d-municipio">Municipio</label>
+        <p-select
+          inputId="d-municipio"
+          formControlName="municipioId"
+          [options]="municipios()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="Selecciona…"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="d-direccion">Dirección *</label>
+        <input pInputText id="d-direccion" formControlName="direccion" />
+      </div>
+      <div class="field">
+        <label for="d-cp">Código postal</label>
+        <input pInputText id="d-cp" formControlName="codigoPostal" />
+      </div>
+      <div class="field">
+        <label for="d-telefono">Teléfono</label>
+        <input pInputText id="d-telefono" formControlName="telefono" />
+      </div>
+      <div class="sat-check">
+        <p-checkbox formControlName="principal" [binary]="true" inputId="d-principal" />
+        <label for="d-principal">Dirección principal</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

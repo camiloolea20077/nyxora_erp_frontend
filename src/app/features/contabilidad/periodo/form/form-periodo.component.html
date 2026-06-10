@@ -1,0 +1,39 @@
+<p-dialog
+  header="Nuevo periodo contable"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="pe-vig">Vigencia *</label>
+      <p-select
+        inputId="pe-vig"
+        formControlName="vigenciaId"
+        [options]="vigencias()"
+        optionLabel="year"
+        optionValue="id"
+        placeholder="Selecciona…"
+        (onChange)="onVigenciaChange($event.value)"
+      />
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label for="pe-anio">Año *</label>
+        <p-inputNumber inputId="pe-anio" formControlName="anio" [useGrouping]="false" />
+      </div>
+      <div class="field">
+        <label for="pe-mes">Mes *</label>
+        <p-select inputId="pe-mes" formControlName="mes" [options]="meses" optionLabel="label" optionValue="value" placeholder="Selecciona…" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button label="Crear" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

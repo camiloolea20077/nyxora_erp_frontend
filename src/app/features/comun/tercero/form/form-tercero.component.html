@@ -1,0 +1,415 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-users"></i></span>
+      <div>
+        <h1 class="head-title">{{ isEdit() ? 'Editar tercero' : 'Nuevo tercero' }}</h1>
+        <p class="head-sub">Datos generales, fiscales y comerciales</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button
+        [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+        icon="pi pi-check"
+        [loading]="loading()"
+        (onClick)="save()"
+      />
+    </div>
+  </header>
+
+  <div class="card">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0"><i class="pi pi-user"></i> Información</p-tab>
+        @if (terceroId()) {
+          <p-tab value="1"><i class="pi pi-id-card"></i> Contactos</p-tab>
+          <p-tab value="2"><i class="pi pi-map-marker"></i> Direcciones</p-tab>
+          <p-tab value="3"><i class="pi pi-credit-card"></i> Cuentas bancarias</p-tab>
+        }
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <form [formGroup]="frm" class="ter-form">
+            <!-- Clasificación (define el tipo de tercero — va primero) -->
+    <section class="sec">
+      <h3 class="sec-title">Clasificación</h3>
+      <div class="grid">
+        <div class="field col-2">
+          <label for="tipoTerceroId">Tipo de tercero *</label>
+          <p-select
+            inputId="tipoTerceroId"
+            formControlName="tipoTerceroId"
+            [options]="tiposTercero()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            placeholder="Cliente, proveedor, banco…"
+            (onChange)="onTipoChange($event.value)"
+          />
+          @if (isInvalid('tipoTerceroId')) {
+            <small class="error">Selecciona el tipo de tercero</small>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Identificación -->
+    <section class="sec">
+      <h3 class="sec-title">Identificación</h3>
+      <div class="grid">
+        <div class="field">
+          <label for="tipoIdentificacionId">Tipo de identificación *</label>
+          <p-select
+            inputId="tipoIdentificacionId"
+            formControlName="tipoIdentificacionId"
+            [options]="tiposIdentificacion()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            placeholder="Selecciona…"
+          />
+          @if (isInvalid('tipoIdentificacionId')) {
+            <small class="error">Obligatorio</small>
+          }
+        </div>
+        <div class="field">
+          <label for="numeroDocumento">Número de documento *</label>
+          <input
+            pInputText
+            id="numeroDocumento"
+            formControlName="numeroDocumento"
+            [class.ng-invalid]="isInvalid('numeroDocumento')"
+          />
+          @if (isInvalid('numeroDocumento')) {
+            <small class="error">Obligatorio</small>
+          }
+        </div>
+        <div class="field sm">
+          <label for="dv">DV</label>
+          <p-inputNumber
+            inputId="dv"
+            formControlName="digitoVerificacion"
+            [useGrouping]="false"
+            [min]="0"
+            [max]="9"
+          />
+        </div>
+        <div class="field">
+          <label for="tipoPersona">Tipo de persona *</label>
+          <p-select
+            inputId="tipoPersona"
+            formControlName="tipoPersona"
+            [options]="tiposPersona"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="onTipoPersonaChange($event.value)"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Datos según tipo de persona -->
+    @if (tipoPersona() === 'natural') {
+      <section class="sec">
+        <h3 class="sec-title">Datos de la persona</h3>
+        <div class="grid">
+          <div class="field">
+            <label for="primerNombre">Primer nombre</label>
+            <input pInputText id="primerNombre" formControlName="primerNombre" />
+          </div>
+          <div class="field">
+            <label for="segundoNombre">Segundo nombre</label>
+            <input pInputText id="segundoNombre" formControlName="segundoNombre" />
+          </div>
+          <div class="field">
+            <label for="primerApellido">Primer apellido</label>
+            <input pInputText id="primerApellido" formControlName="primerApellido" />
+          </div>
+          <div class="field">
+            <label for="segundoApellido">Segundo apellido</label>
+            <input pInputText id="segundoApellido" formControlName="segundoApellido" />
+          </div>
+          <div class="field">
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input pInputText id="fechaNacimiento" type="date" formControlName="fechaNacimiento" />
+          </div>
+        </div>
+      </section>
+    } @else {
+      <section class="sec">
+        <h3 class="sec-title">Datos de la empresa</h3>
+        <div class="grid">
+          <div class="field col-2">
+            <label for="razonSocial">Razón social</label>
+            <input pInputText id="razonSocial" formControlName="razonSocial" />
+          </div>
+          <div class="field">
+            <label for="nombreComercial">Nombre comercial</label>
+            <input pInputText id="nombreComercial" formControlName="nombreComercial" />
+          </div>
+          <div class="field">
+            <label for="nombreRepresentanteLegal">Representante legal</label>
+            <input
+              pInputText
+              id="nombreRepresentanteLegal"
+              formControlName="nombreRepresentanteLegal"
+            />
+          </div>
+          <div class="field">
+            <label for="documentoRepresentanteLegal">Documento rep. legal</label>
+            <input
+              pInputText
+              id="documentoRepresentanteLegal"
+              formControlName="documentoRepresentanteLegal"
+            />
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Ubicación -->
+    <section class="sec">
+      <h3 class="sec-title">Ubicación</h3>
+      <div class="grid">
+        <div class="field">
+          <label for="paisId">País</label>
+          <p-select
+            inputId="paisId"
+            [ngModel]="selectedPaisId()"
+            (ngModelChange)="onPaisChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="paises()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="País…"
+          />
+        </div>
+        <div class="field">
+          <label for="departamentoId">Departamento</label>
+          <p-select
+            inputId="departamentoId"
+            [ngModel]="selectedDepartamentoId()"
+            (ngModelChange)="onDepartamentoChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="departamentos()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            [disabled]="!selectedPaisId()"
+            placeholder="Departamento…"
+          />
+        </div>
+        <div class="field">
+          <label for="municipioId">Municipio</label>
+          <p-select
+            inputId="municipioId"
+            formControlName="municipioId"
+            [options]="municipios()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            [disabled]="!selectedDepartamentoId()"
+            placeholder="Municipio…"
+          />
+        </div>
+        <div class="field col-2">
+          <label for="direccion">Dirección</label>
+          <input pInputText id="direccion" formControlName="direccion" />
+        </div>
+        <div class="field">
+          <label for="sitioWeb">Sitio web</label>
+          <input pInputText id="sitioWeb" formControlName="sitioWeb" />
+        </div>
+      </div>
+    </section>
+
+    @if (mostrarFiscalComercial()) {
+      <!-- Fiscal / DIAN -->
+      <section class="sec">
+        <h3 class="sec-title">Información fiscal (DIAN)</h3>
+      <div class="grid">
+        <div class="field">
+          <label for="actividadEconomicaId">Actividad económica</label>
+          <p-select
+            inputId="actividadEconomicaId"
+            formControlName="actividadEconomicaId"
+            [options]="actividades()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="tipoContribuyenteId">Tipo de contribuyente</label>
+          <p-select
+            inputId="tipoContribuyenteId"
+            formControlName="tipoContribuyenteId"
+            [options]="tiposContribuyente()"
+            optionLabel="nombre"
+            optionValue="id"
+            [filter]="true"
+            filterBy="nombre,codigo"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+      </div>
+      <div class="checks">
+        <div class="chk">
+          <p-checkbox
+            formControlName="responsableIva"
+            [binary]="true"
+            inputId="responsableIva"
+          /><label for="responsableIva">Responsable de IVA</label>
+        </div>
+        <div class="chk">
+          <p-checkbox formControlName="declarante" [binary]="true" inputId="declarante" /><label
+            for="declarante"
+            >Declarante de renta</label
+          >
+        </div>
+        <div class="chk">
+          <p-checkbox formControlName="tieneRut" [binary]="true" inputId="tieneRut" /><label
+            for="tieneRut"
+            >Tiene RUT</label
+          >
+        </div>
+        <div class="chk">
+          <p-checkbox formControlName="aplicaArt383" [binary]="true" inputId="aplicaArt383" /><label
+            for="aplicaArt383"
+            >Aplica Art. 383</label
+          >
+        </div>
+        <div class="chk">
+          <p-checkbox
+            formControlName="esAutoretenedorIva"
+            [binary]="true"
+            inputId="esAutoretenedorIva"
+          /><label for="esAutoretenedorIva">Autorretenedor IVA</label>
+        </div>
+        <div class="chk">
+          <p-checkbox
+            formControlName="esAutoretenedorIca"
+            [binary]="true"
+            inputId="esAutoretenedorIca"
+          /><label for="esAutoretenedorIca">Autorretenedor ICA</label>
+        </div>
+        <div class="chk">
+          <p-checkbox
+            formControlName="esAutoretenedorFuente"
+            [binary]="true"
+            inputId="esAutoretenedorFuente"
+          /><label for="esAutoretenedorFuente">Autorretenedor fuente</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comercial -->
+    <section class="sec">
+      <h3 class="sec-title">Condiciones comerciales</h3>
+      <div class="grid">
+        <div class="field">
+          <label for="condicionPagoClienteId">Condición pago (cliente)</label>
+          <p-select
+            inputId="condicionPagoClienteId"
+            formControlName="condicionPagoClienteId"
+            [options]="condicionesPago()"
+            optionLabel="nombre"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="condicionPagoProveedorId">Condición pago (proveedor)</label>
+          <p-select
+            inputId="condicionPagoProveedorId"
+            formControlName="condicionPagoProveedorId"
+            [options]="condicionesPago()"
+            optionLabel="nombre"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="formaPagoClienteId">Forma pago (cliente)</label>
+          <p-select
+            inputId="formaPagoClienteId"
+            formControlName="formaPagoClienteId"
+            [options]="formasPago()"
+            optionLabel="nombre"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="formaPagoProveedorId">Forma pago (proveedor)</label>
+          <p-select
+            inputId="formaPagoProveedorId"
+            formControlName="formaPagoProveedorId"
+            [options]="formasPago()"
+            optionLabel="nombre"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecciona…"
+          />
+        </div>
+        <div class="field">
+          <label for="interesEfectivoMensual">Interés efectivo mensual (%)</label>
+          <p-inputNumber
+            inputId="interesEfectivoMensual"
+            formControlName="interesEfectivoMensual"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="4"
+          />
+        </div>
+        </div>
+      </section>
+    }
+
+    <!-- Observaciones -->
+    <section class="sec">
+      <h3 class="sec-title">Observaciones</h3>
+      <div class="grid">
+        <div class="field col-3">
+          <label for="observaciones">Observaciones</label>
+          <textarea
+            class="nx-textarea"
+            id="observaciones"
+            formControlName="observaciones"
+            rows="2"
+          ></textarea>
+        </div>
+      </div>
+    </section>
+
+          </form>
+        </p-tabpanel>
+
+        @if (terceroId(); as tid) {
+          <p-tabpanel value="1"><app-contactos-tercero [terceroId]="tid" /></p-tabpanel>
+          <p-tabpanel value="2"><app-direcciones-tercero [terceroId]="tid" /></p-tabpanel>
+          <p-tabpanel value="3"><app-cuentas-tercero [terceroId]="tid" /></p-tabpanel>
+        }
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>
+
+<p-confirmDialog />

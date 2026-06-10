@@ -1,0 +1,49 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar dependencia' : 'Nueva dependencia'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="d-codigo">Código *</label>
+        <input pInputText id="d-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="d-nombre">Nombre *</label>
+        <input pInputText id="d-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="d-cc">Centro de costo</label>
+        <p-select inputId="d-cc" formControlName="centroCostoId" [options]="centros()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Ninguno)" />
+      </div>
+      <div class="field">
+        <label for="d-padre">Dependencia padre</label>
+        <p-select inputId="d-padre" formControlName="dependenciaPadreId" [options]="dependencias()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Raíz)" />
+      </div>
+      <div class="field col-2">
+        <label for="d-ubic">Ubicación</label>
+        <input pInputText id="d-ubic" formControlName="ubicacion" />
+      </div>
+      <div class="field">
+        <label for="d-lat">Latitud</label>
+        <input pInputText id="d-lat" formControlName="latitud" />
+      </div>
+      <div class="field">
+        <label for="d-lng">Longitud</label>
+        <input pInputText id="d-lng" formControlName="longitud" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

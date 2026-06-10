@@ -1,0 +1,71 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar impuesto' : 'Nuevo impuesto'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="i-codigo">Código *</label>
+        <input pInputText id="i-codigo" formControlName="codigo" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="i-nombre">Nombre *</label>
+        <input pInputText id="i-nombre" formControlName="nombre" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">Obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="i-tipo">Tipo</label>
+        <p-select inputId="i-tipo" formControlName="tipo" [options]="tipos" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="i-tarifa">Tarifa (%)</label>
+        <p-inputNumber inputId="i-tarifa" formControlName="tarifa" [minFractionDigits]="0" [maxFractionDigits]="4" suffix=" %" />
+      </div>
+      <div class="field">
+        <label for="i-causacion">Causación</label>
+        <p-select inputId="i-causacion" formControlName="causacion" [options]="causaciones" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="i-periodicidad">Periodicidad</label>
+        <p-select inputId="i-periodicidad" formControlName="periodicidad" [options]="periodicidades" optionLabel="label" optionValue="value" />
+      </div>
+      <div class="field">
+        <label for="i-base">Base gravable</label>
+        <input pInputText id="i-base" formControlName="baseGravable" />
+      </div>
+      <div class="field">
+        <label for="i-vigencia">Vigencia</label>
+        <p-select
+          inputId="i-vigencia"
+          formControlName="vigenciaId"
+          [options]="vigencias()"
+          optionLabel="year"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="(Sin vigencia)"
+        />
+      </div>
+    </div>
+    <div class="checks">
+      <div class="field-check">
+        <p-checkbox formControlName="aplicaAiu" [binary]="true" inputId="i-aiu" />
+        <label for="i-aiu">Aplica AIU</label>
+      </div>
+      <div class="field-check">
+        <p-checkbox formControlName="retencionNomina" [binary]="true" inputId="i-retnom" />
+        <label for="i-retnom">Retención de nómina</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

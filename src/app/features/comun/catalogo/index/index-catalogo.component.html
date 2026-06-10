@@ -1,0 +1,98 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-book"></i></span>
+      <div>
+        <h1 class="head-title">Catálogos</h1>
+        <p class="head-sub">Administra los catálogos del sistema</p>
+      </div>
+    </div>
+    <p-button label="Nuevo" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <p-select
+      [(ngModel)]="catalogo"
+      (onChange)="onCatalogoChange($event.value)"
+      [options]="catalogos"
+      optionLabel="label"
+      optionValue="slug"
+      styleClass="cat-select"
+    />
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 12rem">Código</th>
+          <th>Nombre</th>
+          <th style="width: 8rem">Estado</th>
+          <th style="width: 7rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.codigo }}</td>
+          <td>{{ row.nombre }}</td>
+          <td><p-tag [value]="row.active ? 'Activo' : 'Inactivo'" [severity]="row.active ? 'success' : 'danger'" /></td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" class="empty-row">Sin ítems en este catálogo</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+
+<p-dialog
+  [header]="(isEdit() ? 'Editar' : 'Nuevo') + ' — ' + catalogoLabel()"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="cat-codigo">Código</label>
+      <input pInputText id="cat-codigo" formControlName="codigo" class="w-full" [class.ng-invalid]="isInvalid('codigo')" />
+      @if (isInvalid('codigo')) { <small class="error">El código es obligatorio</small> }
+    </div>
+    <div class="field">
+      <label for="cat-nombre">Nombre</label>
+      <input pInputText id="cat-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+      @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+    </div>
+    <div class="field-check">
+      <p-checkbox formControlName="activo" [binary]="true" inputId="cat-activo" />
+      <label for="cat-activo">Activo</label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

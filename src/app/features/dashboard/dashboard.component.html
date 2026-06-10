@@ -1,0 +1,33 @@
+@if (session(); as s) {
+  <div class="dash">
+    <header class="dash-head">
+      <h1>Hola, {{ s.username }} 👋</h1>
+      <p>Este es el resumen de tu operación.</p>
+    </header>
+
+    <section class="stats">
+      @for (st of stats; track st.label) {
+        <div class="stat-card">
+          <span class="stat-icon"><i [class]="st.icon"></i></span>
+          <div class="stat-body">
+            <span class="stat-value nx-mono">{{ st.value }}</span>
+            <span class="stat-label">{{ st.label }}</span>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="welcome">
+      <i class="pi pi-check-circle"></i>
+      <div>
+        <h2>Sesión activa</h2>
+        <p>
+          Empresa <b class="nx-mono">{{ s.empresaId }}</b> ·
+          Usuario <b class="nx-mono">{{ s.usuarioId }}</b> ·
+          Permisos <b class="nx-mono">{{ s.permisos.length }}</b>
+        </p>
+        <p class="muted">Usa el menú lateral para navegar por los módulos del ERP.</p>
+      </div>
+    </section>
+  </div>
+}

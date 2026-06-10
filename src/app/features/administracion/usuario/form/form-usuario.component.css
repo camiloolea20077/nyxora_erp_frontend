@@ -1,0 +1,56 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.75rem;
+}
+.field .hint {
+  color: var(--nx-muted);
+  font-size: 0.72rem;
+}
+.tercero-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.tercero-pick .picked {
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--nx-text);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  background: #f8fafc;
+}
+.tercero-pick .picked.empty {
+  color: var(--nx-muted);
+}
+.field-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.field-check label {
+  font-size: 0.85rem;
+  color: var(--nx-text);
+}
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input,
+:host ::ng-deep .p-password,
+:host ::ng-deep .p-password input {
+  width: 100%;
+}

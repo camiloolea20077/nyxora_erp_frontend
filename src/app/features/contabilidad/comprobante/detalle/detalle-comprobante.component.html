@@ -1,0 +1,53 @@
+@if (comprobante(); as c) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-file-edit"></i></span>
+        <div>
+          <h1 class="head-title">Comprobante {{ c.numero }}</h1>
+          <p class="head-sub">{{ c.fecha }} · {{ c.descripcion }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="c.estado" />
+        @if (c.estado === 'borrador') {
+          <p-button label="Confirmar" icon="pi pi-check" severity="success" (onClick)="confirmar()" />
+        }
+        @if (c.estado === 'confirmado') {
+          <p-button label="Reversar" icon="pi pi-replay" severity="danger" [outlined]="true" (onClick)="reversar()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <table class="mov">
+        <thead>
+          <tr>
+            <th>Cuenta</th>
+            <th>Descripción</th>
+            <th class="r">Débito</th>
+            <th class="r">Crédito</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of c.movimientos; track m.id) {
+            <tr>
+              <td>{{ nombreCuenta(m.cuentaId) }}</td>
+              <td>{{ m.descripcion }}</td>
+              <td class="r nx-mono">{{ m.debito | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ m.credito | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="r b">Totales</td>
+            <td class="r b nx-mono">{{ c.totalDebito | number: '1.2-2' }}</td>
+            <td class="r b nx-mono">{{ c.totalCredito | number: '1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+}

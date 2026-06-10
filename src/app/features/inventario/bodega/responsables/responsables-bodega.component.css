@@ -1,0 +1,24 @@
+.subtitle {
+  color: var(--nx-muted);
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+}
+.add-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.chk label {
+  font-size: 0.85rem;
+  color: var(--nx-text);
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.9rem;
+}

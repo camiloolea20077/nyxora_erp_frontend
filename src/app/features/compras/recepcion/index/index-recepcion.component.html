@@ -1,0 +1,84 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-inbox"></i></span>
+      <div>
+        <h1 class="head-title">Recepciones</h1>
+        <p class="head-sub">Entradas de mercancía por compra</p>
+      </div>
+    </div>
+    <p-button label="Nueva recepción" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 12rem">Número</th>
+          <th style="width: 10rem">Orden compra</th>
+          <th style="width: 10rem">Fecha</th>
+          <th style="width: 10rem">Estado</th>
+          <th style="width: 11rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.numero }}</td>
+          <td class="nx-mono">#{{ row.ordenCompraId }}</td>
+          <td>{{ row.fecha }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+          <td class="text-center">
+            <button pButton icon="pi pi-eye" [text]="true" pTooltip="Ver" (click)="ver(row)"></button>
+            @if (row.estado === 'borrador') {
+              <button pButton icon="pi pi-check" [text]="true" severity="success" pTooltip="Confirmar" (click)="abrirConfirmar(row)"></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin recepciones</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  header="Confirmar recepción"
+  [visible]="showConfirm()"
+  (visibleChange)="showConfirm.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="subtitle">Al confirmar se genera la entrada a inventario y el asiento contable.</p>
+  <div class="conf-form">
+    <div class="field">
+      <label>Cuenta de inventario *</label>
+      <p-select [(ngModel)]="cuentaInventarioId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" placeholder="Selecciona…" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Cuenta contrapartida *</label>
+      <p-select [(ngModel)]="cuentaContrapartidaId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" placeholder="Selecciona…" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Periodo contable *</label>
+      <p-select [(ngModel)]="periodoContableId" [options]="periodoOpts()" optionLabel="label" optionValue="id" placeholder="Selecciona…" appendTo="body" />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showConfirm.set(false)" />
+    <p-button label="Confirmar" icon="pi pi-check" [loading]="confirmando()" (onClick)="confirmar()" />
+  </ng-template>
+</p-dialog>
