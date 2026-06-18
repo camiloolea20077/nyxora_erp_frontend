@@ -5,6 +5,8 @@ import { lastValueFrom } from 'rxjs';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -30,6 +32,8 @@ interface OpcionPersona {
     TableModule,
     ButtonModule,
     InputTextModule,
+    IconFieldModule,
+    InputIconModule,
     SelectModule,
     TagModule,
     ConfirmDialogModule,

@@ -1,0 +1,47 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding-top: 0.5rem;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem 1.1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field.col-2 {
+  grid-column: span 2;
+}
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.72rem;
+}
+.sec {
+  border: 1px solid var(--nx-border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.sec-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--nx-text);
+  margin: 0 0 0.9rem;
+}
+.w-full {
+  width: 100%;
+}
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}

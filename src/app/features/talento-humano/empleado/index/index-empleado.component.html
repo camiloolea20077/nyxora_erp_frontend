@@ -1,0 +1,56 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-id-card"></i></span>
+      <div>
+        <h1 class="head-title">Empleados</h1>
+        <p class="head-sub">Hoja de vida: estudios, familiares, historia laboral y evaluaciones</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por nombre o documento…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 12rem">Documento</th>
+          <th>Nombre</th>
+          <th style="width: 9rem">Persona</th>
+          <th style="width: 8rem">Estado</th>
+          <th style="width: 11rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.numeroDocumento }}</td>
+          <td>{{ row.nombre }}</td>
+          <td>{{ row.tipoPersona }}</td>
+          <td><p-tag [value]="row.active ? 'Activo' : 'Inactivo'" [severity]="row.active ? 'success' : 'danger'" /></td>
+          <td class="text-center">
+            <p-button label="Hoja de vida" icon="pi pi-folder-open" size="small" [outlined]="true" (onClick)="hojaVida(row)" />
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin empleados registrados</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

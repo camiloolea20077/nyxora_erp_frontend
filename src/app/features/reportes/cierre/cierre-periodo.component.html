@@ -1,0 +1,45 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-lock"></i></span>
+      <div>
+        <h1 class="head-title">Cierre de periodo</h1>
+        <p class="head-sub">Valida borradores → recalcula saldos → cierra el periodo contable</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="toolbar">
+      <p-select
+        appendTo="body"
+        [options]="periodos()"
+        optionLabel="label"
+        optionValue="id"
+        [(ngModel)]="periodoId"
+        [filter]="true"
+        placeholder="Periodo contable…"
+        styleClass="sel"
+      />
+      <p-button label="Cerrar periodo" icon="pi pi-lock" severity="danger" [loading]="working()" (onClick)="confirmar()" />
+    </div>
+
+    @if (resultado(); as r) {
+      <div class="result">
+        <i class="pi pi-check-circle ok"></i>
+        <div>
+          <h2>Periodo {{ r.anio }}-{{ r.mes }} <p-tag [value]="r.estado" severity="success" /></h2>
+          <p>{{ r.mensaje }}</p>
+          <p class="muted">Saldos recalculados: <b class="nx-mono">{{ r.saldosRecalculados }}</b></p>
+        </div>
+      </div>
+    } @else {
+      <p class="hint">
+        El cierre falla si hay comprobantes en <b>borrador</b>: confírmalos o reversalos primero. Una vez
+        cerrado, el periodo no admite nuevos asientos.
+      </p>
+    }
+  </div>
+</div>
+
+<p-confirmDialog />

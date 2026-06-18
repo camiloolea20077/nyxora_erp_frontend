@@ -1,0 +1,38 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar proceso' : 'Nuevo proceso disciplinario'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '620px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="pr-fecha">Fecha</label>
+        <input pInputText id="pr-fecha" type="date" formControlName="fecha" class="w-full" [class.ng-invalid]="isInvalid('fecha')" />
+        @if (isInvalid('fecha')) { <small class="error">La fecha es obligatoria</small> }
+      </div>
+      <div class="field"></div>
+      <div class="field">
+        <label for="pr-inv">Investigado (vinculación)</label>
+        <p-select inputId="pr-inv" appendTo="body" [options]="vinculaciones()" optionLabel="empleadoNombre" optionValue="id" formControlName="vinculacionId" [filter]="true" filterBy="empleadoNombre,codigo" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="pr-resp">Responsable</label>
+        <p-select inputId="pr-resp" appendTo="body" [options]="terceros()" optionLabel="nombre" optionValue="id" formControlName="responsableId" [filter]="true" filterBy="nombre,numeroDocumento" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field col-2">
+        <label for="pr-desc">Descripción</label>
+        <textarea pTextarea id="pr-desc" formControlName="descripcion" rows="3" class="w-full"></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,42 @@
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 22rem));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.kpi {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.kpi.bad {
+  border-color: var(--nx-danger);
+}
+.k-label {
+  font-size: 0.8rem;
+  color: var(--nx-muted);
+}
+.k-val {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--nx-text);
+}
+.text-right {
+  text-align: right;
+}
+.vencido {
+  color: var(--nx-danger);
+  font-weight: 600;
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  padding: 1rem;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.55rem 0.9rem;
+}

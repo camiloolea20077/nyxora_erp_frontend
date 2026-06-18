@@ -1,0 +1,57 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-calendar-plus"></i></span>
+      <div>
+        <h1 class="head-title">Acuerdos de pago</h1>
+        <p class="head-sub">Planes de pago sobre cuentas por cobrar</p>
+      </div>
+    </div>
+    <p-button label="Nuevo acuerdo" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 6rem">#</th>
+          <th style="width: 10rem">CxC</th>
+          <th style="width: 10rem">Fecha</th>
+          <th style="width: 8rem" class="r">Cuotas</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 10rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.id }}</td>
+          <td class="nx-mono">#{{ row.cuentaPorCobrarId }}</td>
+          <td>{{ row.fecha }}</td>
+          <td class="r nx-mono">{{ row.numeroCuotas }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+          <td class="text-center">
+            <button pButton icon="pi pi-eye" [text]="true" pTooltip="Ver" (click)="ver(row)"></button>
+            @if (row.estado === 'vigente') {
+              <button pButton icon="pi pi-ban" [text]="true" severity="danger" pTooltip="Anular" (click)="anular(row)"></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">Sin acuerdos de pago</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />

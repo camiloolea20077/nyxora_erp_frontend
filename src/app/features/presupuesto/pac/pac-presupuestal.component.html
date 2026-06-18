@@ -1,0 +1,69 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-calendar"></i></span>
+      <div>
+        <h1 class="head-title">PAC presupuestal</h1>
+        <p class="head-sub">Plan Anualizado de Caja por rubro y mes</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card filtros">
+    <div class="field">
+      <label for="pac-rubro">Rubro</label>
+      <p-select inputId="pac-rubro" [(ngModel)]="rubroId" [options]="rubros()" optionLabel="codigoRubro" optionValue="id" [filter]="true" filterBy="codigoRubro,nombreRubro" placeholder="Selecciona…" />
+    </div>
+    <div class="field año">
+      <label for="pac-anio">Año</label>
+      <p-inputNumber inputId="pac-anio" [(ngModel)]="anio" [useGrouping]="false" [min]="2000" [max]="2100" />
+    </div>
+    <p-button label="Consultar" icon="pi pi-search" [loading]="cargando()" (onClick)="consultar()" />
+    <p-button label="Definir mes" icon="pi pi-plus" [disabled]="!rubroId" (onClick)="nuevo()" />
+  </div>
+
+  <div class="table-card">
+    <p-table [value]="rows()" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 12rem">Mes</th>
+          <th class="r">Valor</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ mesNombre(row.mes) }}</td>
+          <td class="r nx-mono">{{ row.valor | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="2" class="empty-row">Sin PAC definido — selecciona un rubro y consulta</td></tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        @if (rows().length > 0) {
+          <tr>
+            <td class="b">Total</td>
+            <td class="r b nx-mono">{{ totalPac() | number: '1.2-2' }}</td>
+          </tr>
+        }
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog header="Definir PAC del mes" [visible]="showForm()" (visibleChange)="showForm.set($event)" [modal]="true" [style]="{ width: '420px' }" [draggable]="false" [resizable]="false">
+  <div class="conf-form">
+    <div class="field">
+      <label>Mes</label>
+      <p-select [(ngModel)]="mes" [options]="meses" optionLabel="label" optionValue="value" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Valor</label>
+      <p-inputNumber [(ngModel)]="valor" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showForm.set(false)" />
+    <p-button label="Guardar" icon="pi pi-check" [loading]="guardando()" (onClick)="guardar()" />
+  </ng-template>
+</p-dialog>

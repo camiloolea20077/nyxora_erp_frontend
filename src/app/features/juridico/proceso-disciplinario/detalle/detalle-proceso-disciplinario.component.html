@@ -1,0 +1,99 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-flag"></i></span>
+      <div>
+        <h1 class="head-title">
+          Proceso disciplinario
+          @if (proceso(); as p) { <p-tag [value]="p.estado" severity="info" /> }
+        </h1>
+        <p class="head-sub">{{ proceso()?.investigadoNombre }} · {{ proceso()?.fecha }}</p>
+      </div>
+    </div>
+    <div class="estado-box">
+      <p-select appendTo="body" [options]="estados" optionLabel="label" optionValue="value" [(ngModel)]="estadoSel" placeholder="Estado…" />
+      <p-button label="Cambiar estado" icon="pi pi-sync" [loading]="working()" (onClick)="cambiarEstado()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0"><i class="pi pi-exclamation-triangle"></i> Faltas ({{ faltas().length }})</p-tab>
+        <p-tab value="1"><i class="pi pi-comments"></i> Descargos ({{ descargos().length }})</p-tab>
+        <p-tab value="2"><i class="pi pi-bell"></i> Notificaciones ({{ notificaciones().length }})</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <!-- Faltas -->
+        <p-tabpanel value="0">
+          <div class="add-row">
+            <p-select appendTo="body" [options]="faltaOpciones()" optionLabel="nombre" optionValue="id" [(ngModel)]="faltaId" [filter]="true" [showClear]="true" placeholder="Falta…" styleClass="grow" />
+            <p-button label="Imputar" icon="pi pi-plus" size="small" (onClick)="agregarFalta()" />
+          </div>
+          <p-table [value]="faltas()" [loading]="loading()" dataKey="id">
+            <ng-template pTemplate="header">
+              <tr><th style="width: 10rem">Código</th><th>Falta</th><th style="width: 5rem" class="text-center">Acciones</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td class="nx-mono">{{ row.faltaCodigo }}</td>
+                <td>{{ row.faltaNombre }}</td>
+                <td class="text-center"><button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarFalta(row)"></button></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin faltas imputadas</td></tr></ng-template>
+          </p-table>
+        </p-tabpanel>
+
+        <!-- Descargos -->
+        <p-tabpanel value="1">
+          <div class="add-row">
+            <input pInputText type="date" [(ngModel)]="descargoFecha" />
+            <input pInputText [(ngModel)]="descargoTexto" placeholder="Descargo…" class="grow" />
+            <p-button label="Agregar" icon="pi pi-plus" size="small" (onClick)="agregarDescargo()" />
+          </div>
+          <p-table [value]="descargos()" [loading]="loading()" dataKey="id">
+            <ng-template pTemplate="header">
+              <tr><th style="width: 10rem">Fecha</th><th>Texto</th><th style="width: 5rem" class="text-center">Acciones</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.fecha }}</td>
+                <td>{{ row.texto }}</td>
+                <td class="text-center"><button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarDescargo(row)"></button></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin descargos</td></tr></ng-template>
+          </p-table>
+        </p-tabpanel>
+
+        <!-- Notificaciones -->
+        <p-tabpanel value="2">
+          <div class="add-row">
+            <input pInputText type="date" [(ngModel)]="notifFecha" />
+            <input pInputText [(ngModel)]="notifTipo" placeholder="Tipo…" class="tipo" />
+            <input pInputText [(ngModel)]="notifTexto" placeholder="Texto…" class="grow" />
+            <p-button label="Agregar" icon="pi pi-plus" size="small" (onClick)="agregarNotificacion()" />
+          </div>
+          <p-table [value]="notificaciones()" [loading]="loading()" dataKey="id">
+            <ng-template pTemplate="header">
+              <tr><th style="width: 10rem">Fecha</th><th style="width: 10rem">Tipo</th><th>Texto</th><th style="width: 5rem" class="text-center">Acciones</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.fecha }}</td>
+                <td>{{ row.tipo }}</td>
+                <td>{{ row.texto }}</td>
+                <td class="text-center"><button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarNotificacion(row)"></button></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="4" class="empty-row">Sin notificaciones</td></tr></ng-template>
+          </p-table>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>
+
+<p-confirmDialog />

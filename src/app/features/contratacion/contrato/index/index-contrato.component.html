@@ -1,0 +1,63 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-file-edit"></i></span>
+      <div>
+        <h1 class="head-title">Contratos</h1>
+        <p class="head-sub">Contratos de adquisición de bienes y servicios</p>
+      </div>
+    </div>
+    <p-button label="Nuevo contrato" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por número o nombre…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 11rem">Número</th>
+          <th>Nombre</th>
+          <th style="width: 16rem">Contratista</th>
+          <th style="width: 11rem" class="text-right">Valor</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 9rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.numero }}</td>
+          <td>{{ row.nombre }}</td>
+          <td>{{ row.contratistaNombre }}</td>
+          <td class="text-right">{{ row.valor | number: '1.0-0' }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+          <td class="text-center">
+            <button pButton icon="pi pi-eye" [text]="true" (click)="ver(row)"></button>
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">Sin contratos registrados</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />

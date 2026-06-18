@@ -1,0 +1,82 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar chequera' : 'Nueva chequera'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="ch-cb">Cuenta bancaria</label>
+      <p-select
+        inputId="ch-cb"
+        formControlName="cuentaBancariaId"
+        [options]="cuentas()"
+        optionLabel="numeroCuenta"
+        optionValue="id"
+        [filter]="true"
+        filterBy="numeroCuenta"
+        placeholder="Selecciona…"
+        appendTo="body"
+        [class.ng-invalid]="isInvalid('cuentaBancariaId')"
+      />
+      @if (isInvalid('cuentaBancariaId')) {
+        <small class="error">La cuenta es obligatoria</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="ch-fecha">Fecha de expedición</label>
+      <input
+        pInputText
+        id="ch-fecha"
+        type="date"
+        formControlName="fechaExpedicion"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('fechaExpedicion')"
+      />
+      @if (isInvalid('fechaExpedicion')) {
+        <small class="error">La fecha es obligatoria</small>
+      }
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="ch-ini">Número inicial</label>
+        <p-inputNumber
+          inputId="ch-ini"
+          formControlName="numeroInicial"
+          [useGrouping]="false"
+          [class.ng-invalid]="isInvalid('numeroInicial')"
+        />
+        @if (isInvalid('numeroInicial')) {
+          <small class="error">Obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="ch-fin">Número final</label>
+        <p-inputNumber
+          inputId="ch-fin"
+          formControlName="numeroFinal"
+          [useGrouping]="false"
+          [class.ng-invalid]="isInvalid('numeroFinal')"
+        />
+        @if (isInvalid('numeroFinal')) {
+          <small class="error">Obligatorio</small>
+        }
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

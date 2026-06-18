@@ -136,10 +136,11 @@ export const NAV_MENU: NavGroup[] = [
     label: 'Presupuesto',
     icon: 'pi pi-chart-line',
     items: [
-      { label: 'Rubros', icon: 'pi pi-list', route: '/rubros' },
-      { label: 'CDP', icon: 'pi pi-file', route: '/cdp' },
-      { label: 'Compromisos', icon: 'pi pi-check-circle', route: '/compromisos' },
-      { label: 'PAC', icon: 'pi pi-calendar', route: '/pac' },
+      { label: 'Rubros', icon: 'pi pi-list', route: '/rubros-presupuestales' },
+      { label: 'Fuentes de financiamiento', icon: 'pi pi-wallet', route: '/fuentes-financiamiento' },
+      { label: 'CPC', icon: 'pi pi-book', route: '/cpc' },
+      { label: 'Ejecución (CDP→pago)', icon: 'pi pi-check-circle', route: '/ejecucion-presupuestal' },
+      { label: 'PAC', icon: 'pi pi-calendar', route: '/pac-presupuestal' },
     ],
   },
   {
@@ -147,8 +148,7 @@ export const NAV_MENU: NavGroup[] = [
     icon: 'pi pi-desktop',
     items: [
       { label: 'Activos', icon: 'pi pi-desktop', route: '/activos-fijos' },
-      { label: 'Depreciación', icon: 'pi pi-chart-line', route: '/depreciacion' },
-      { label: 'Pólizas', icon: 'pi pi-shield', route: '/polizas-activos' },
+      { label: 'Pólizas de seguro', icon: 'pi pi-shield', route: '/polizas-seguro' },
     ],
   },
   {
@@ -156,8 +156,8 @@ export const NAV_MENU: NavGroup[] = [
     icon: 'pi pi-file-edit',
     items: [
       { label: 'Contratos', icon: 'pi pi-file-edit', route: '/contratos' },
-      { label: 'Modalidades', icon: 'pi pi-list', route: '/modalidades' },
-      { label: 'Pólizas', icon: 'pi pi-shield', route: '/polizas-contrato' },
+      { label: 'Modalidades', icon: 'pi pi-list', route: '/modalidades-contrato' },
+      { label: 'Plantillas de cláusula', icon: 'pi pi-book', route: '/clausulas-plantilla' },
     ],
   },
   {
@@ -165,7 +165,7 @@ export const NAV_MENU: NavGroup[] = [
     icon: 'pi pi-id-card',
     items: [
       { label: 'Empleados', icon: 'pi pi-users', route: '/empleados' },
-      { label: 'Evaluaciones', icon: 'pi pi-star', route: '/evaluaciones' },
+      { label: 'Programas de evaluación', icon: 'pi pi-star', route: '/evaluacion-programas' },
     ],
   },
   {
@@ -173,7 +173,9 @@ export const NAV_MENU: NavGroup[] = [
     icon: 'pi pi-dollar',
     items: [
       { label: 'Cargos', icon: 'pi pi-briefcase', route: '/cargos' },
+      { label: 'Grupos de nómina', icon: 'pi pi-users', route: '/grupos-nomina' },
       { label: 'Conceptos', icon: 'pi pi-list', route: '/conceptos-nomina' },
+      { label: 'Vinculaciones', icon: 'pi pi-id-card', route: '/vinculaciones' },
       { label: 'Novedades', icon: 'pi pi-bell', route: '/novedades' },
       { label: 'Liquidaciones', icon: 'pi pi-dollar', route: '/liquidaciones' },
     ],
@@ -194,6 +196,18 @@ export const NAV_MENU: NavGroup[] = [
     items: [
       { label: 'Procesos disciplinarios', icon: 'pi pi-flag', route: '/procesos-disciplinarios' },
       { label: 'Faltas', icon: 'pi pi-exclamation-triangle', route: '/faltas' },
+      { label: 'Clasificaciones de falta', icon: 'pi pi-tags', route: '/clasificaciones-falta' },
+    ],
+  },
+  {
+    label: 'Reportes',
+    icon: 'pi pi-chart-bar',
+    items: [
+      { label: 'Balance general', icon: 'pi pi-chart-bar', route: '/reportes/balance-general' },
+      { label: 'Estado de resultados', icon: 'pi pi-chart-line', route: '/reportes/estado-resultados' },
+      { label: 'Cartera', icon: 'pi pi-money-bill', route: '/reportes/cartera' },
+      { label: 'Ejecución presupuestal', icon: 'pi pi-percentage', route: '/reportes/ejecucion-presupuestal' },
+      { label: 'Cierre de periodo', icon: 'pi pi-lock', route: '/reportes/cierre-periodo' },
     ],
   },
 ];

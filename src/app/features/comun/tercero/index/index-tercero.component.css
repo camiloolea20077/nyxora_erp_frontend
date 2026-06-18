@@ -6,22 +6,12 @@
   margin-bottom: 1rem;
 }
 .filtros .search {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
   flex: 1;
   min-width: 220px;
   max-width: 340px;
 }
-.filtros .search i {
-  position: absolute;
-  left: 0.75rem;
-  color: var(--nx-muted);
-  font-size: 0.85rem;
-}
 .filtros .search input {
   width: 100%;
-  padding-left: 2.1rem;
 }
 :host ::ng-deep .f-select {
   min-width: 170px;

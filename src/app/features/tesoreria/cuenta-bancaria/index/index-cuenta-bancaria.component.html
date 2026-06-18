@@ -1,0 +1,65 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-building-columns"></i></span>
+      <div>
+        <h1 class="head-title">Cuentas bancarias</h1>
+        <p class="head-sub">Cuentas de tesorería</p>
+      </div>
+    </div>
+    <p-button label="Nueva cuenta" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Banco</th>
+          <th style="width: 16rem">Número de cuenta</th>
+          <th style="width: 9rem" class="text-center">Sobregiro</th>
+          <th style="width: 11rem" class="text-center">Transferencias</th>
+          <th style="width: 9rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.bancoNombre || '—' }}</td>
+          <td class="nx-mono">{{ row.numeroCuenta }}</td>
+          <td class="text-center">
+            <p-tag [value]="row.manejaSobregiro ? 'Sí' : 'No'" [severity]="row.manejaSobregiro ? 'success' : 'secondary'" />
+          </td>
+          <td class="text-center">
+            <p-tag [value]="row.aceptaTransferencias ? 'Sí' : 'No'" [severity]="row.aceptaTransferencias ? 'success' : 'secondary'" />
+          </td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" pTooltip="Editar" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin cuentas bancarias</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-cuenta-bancaria [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />

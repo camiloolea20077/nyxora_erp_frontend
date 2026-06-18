@@ -6,27 +6,39 @@
     </header>
 
     <section class="stats">
-      @for (st of stats; track st.label) {
-        <div class="stat-card">
+      @for (st of metrics(); track st.resource) {
+        <a class="stat-card" [routerLink]="st.route">
           <span class="stat-icon"><i [class]="st.icon"></i></span>
           <div class="stat-body">
-            <span class="stat-value nx-mono">{{ st.value }}</span>
+            <span class="stat-value nx-mono" [class.skeleton]="st.loading">{{ st.value }}</span>
             <span class="stat-label">{{ st.label }}</span>
           </div>
-        </div>
+          <i class="pi pi-arrow-up-right stat-go"></i>
+        </a>
       }
     </section>
 
-    <section class="welcome">
-      <i class="pi pi-check-circle"></i>
-      <div>
-        <h2>Sesión activa</h2>
+    <section class="grid-2">
+      <div class="panel">
+        <h2 class="panel-title"><i class="pi pi-bolt"></i> Accesos rápidos</h2>
+        <div class="quick-grid">
+          @for (q of quickLinks; track q.route) {
+            <a class="quick" [routerLink]="q.route">
+              <i [class]="q.icon"></i>
+              <span>{{ q.label }}</span>
+            </a>
+          }
+        </div>
+      </div>
+
+      <div class="panel welcome">
+        <h2 class="panel-title"><i class="pi pi-check-circle ok"></i> Sesión activa</h2>
         <p>
           Empresa <b class="nx-mono">{{ s.empresaId }}</b> ·
           Usuario <b class="nx-mono">{{ s.usuarioId }}</b> ·
           Permisos <b class="nx-mono">{{ s.permisos.length }}</b>
         </p>
-        <p class="muted">Usa el menú lateral para navegar por los módulos del ERP.</p>
+        <p class="muted">Las tarjetas muestran el total de registros de tu empresa. Haz clic para ir al módulo.</p>
       </div>
     </section>
   </div>

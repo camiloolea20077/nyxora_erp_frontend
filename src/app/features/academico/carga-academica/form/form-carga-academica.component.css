@@ -1,0 +1,53 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding-top: 0.5rem;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem 1.1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field.col-1 {
+  grid-column: 1 / -1;
+}
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.72rem;
+}
+.lineas-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.lineas-head h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--nx-text);
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  padding: 1rem;
+}
+.w-full {
+  width: 100%;
+}
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}

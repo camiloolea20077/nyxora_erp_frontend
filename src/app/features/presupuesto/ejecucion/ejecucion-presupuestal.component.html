@@ -1,0 +1,114 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-check-circle"></i></span>
+      <div>
+        <h1 class="head-title">Ejecución presupuestal</h1>
+        <p class="head-sub">Apropiación y cadena CDP → compromiso → obligación → pago</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card filtros">
+    <div class="field">
+      <label for="ep-rubro">Rubro</label>
+      <p-select inputId="ep-rubro" [(ngModel)]="rubroId" [options]="rubros()" optionLabel="codigoRubro" optionValue="id" [filter]="true" filterBy="codigoRubro,nombreRubro" placeholder="Selecciona…" />
+    </div>
+    <div class="field año">
+      <label for="ep-anio">Año</label>
+      <p-inputNumber inputId="ep-anio" [(ngModel)]="anio" [useGrouping]="false" [min]="2000" [max]="2100" />
+    </div>
+    <p-button label="Consultar" icon="pi pi-search" [loading]="cargando()" (onClick)="consultar()" />
+  </div>
+
+  @if (saldo(); as s) {
+    <div class="card">
+      <div class="saldo-head">
+        <h3>Saldo {{ s.anio }}</h3>
+        <div class="head-actions">
+          <p-button label="Apropiar" icon="pi pi-pencil" [outlined]="true" size="small" (onClick)="abrirApropiar()" />
+          <p-button label="Registrar afectación" icon="pi pi-plus" size="small" (onClick)="abrirAfectacion()" />
+          <p-button label="Recalcular" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="recalcular()" />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="kpi"><span>Apropiación neta</span><b class="nx-mono">{{ s.apropiacionNeta | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Disponibilidad (CDP)</span><b class="nx-mono">{{ s.disponibilidad | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Compromiso</span><b class="nx-mono">{{ s.compromiso | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Obligación</span><b class="nx-mono">{{ s.obligacion | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Pagado</span><b class="nx-mono">{{ s.pagado | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Plan inicial</span><b class="nx-mono">{{ s.planInicial | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Adiciones</span><b class="nx-mono">{{ s.adiciones | number: '1.2-2' }}</b></div>
+        <div class="kpi"><span>Reconocimientos / Recaudos</span><b class="nx-mono">{{ s.reconocimientos | number: '1.2-2' }} / {{ s.recaudos | number: '1.2-2' }}</b></div>
+      </div>
+    </div>
+  } @else if (rubroId) {
+    <div class="card">
+      <p class="empty">Aún no hay apropiación para este rubro y año. Usa el botón al consultar tras apropiar.</p>
+      <p-button label="Apropiar" icon="pi pi-pencil" (onClick)="abrirApropiar()" />
+    </div>
+  }
+
+  <div class="card">
+    <h3 class="lines-title">Afectaciones del rubro</h3>
+    <p-table [value]="afectaciones()" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 6rem">#</th>
+          <th>Tipo de operación</th>
+          <th style="width: 14rem" class="r">Valor</th>
+          <th style="width: 14rem">Registrado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.id }}</td>
+          <td><p-tag [value]="row.tipoOperacion" /></td>
+          <td class="r nx-mono">{{ row.valor | number: '1.2-2' }}</td>
+          <td>{{ row.createdAt }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" class="empty-row">Sin afectaciones — selecciona un rubro y consulta</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Apropiar -->
+<p-dialog header="Apropiación del rubro" [visible]="showApropiar()" (visibleChange)="showApropiar.set($event)" [modal]="true" [style]="{ width: '520px' }" [draggable]="false" [resizable]="false">
+  <div class="conf-form grid2">
+    <div class="field"><label>Plan inicial</label><p-inputNumber [(ngModel)]="apPlanInicial" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+    <div class="field"><label>Adiciones</label><p-inputNumber [(ngModel)]="apAdiciones" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+    <div class="field"><label>Reducciones</label><p-inputNumber [(ngModel)]="apReducciones" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+    <div class="field"><label>Créditos</label><p-inputNumber [(ngModel)]="apCreditos" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+    <div class="field"><label>Contracréditos</label><p-inputNumber [(ngModel)]="apContraCreditos" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+    <div class="field"><label>Aplazamientos</label><p-inputNumber [(ngModel)]="apAplazamientos" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" /></div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showApropiar.set(false)" />
+    <p-button label="Guardar" icon="pi pi-check" [loading]="apropiando()" (onClick)="apropiar()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Afectación -->
+<p-dialog header="Registrar afectación" [visible]="showAfectacion()" (visibleChange)="showAfectacion.set($event)" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false">
+  <div class="conf-form">
+    <div class="field">
+      <label>Tipo de operación</label>
+      <p-select [(ngModel)]="afTipo" [options]="tipos" optionLabel="label" optionValue="value" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Valor</label>
+      <p-inputNumber [(ngModel)]="afValor" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+    </div>
+    <div class="field">
+      <label>Descripción</label>
+      <input pInputText [(ngModel)]="afDescripcion" class="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showAfectacion.set(false)" />
+    <p-button label="Registrar" icon="pi pi-check" [loading]="registrando()" (onClick)="registrarAfectacion()" />
+  </ng-template>
+</p-dialog>

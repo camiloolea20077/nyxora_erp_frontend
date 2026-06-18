@@ -1,0 +1,100 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Estudios</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nivel</th>
+        <th>Título</th>
+        <th>Institución</th>
+        <th style="width: 8rem">Grado</th>
+        <th style="width: 7rem">Convalida</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ nivelNombre(row.nivelEstudioId) }}</td>
+        <td>{{ row.titulo }}</td>
+        <td>{{ row.institucion }}</td>
+        <td>{{ row.fechaGrado }}</td>
+        <td>@if (row.convalidado) { <p-tag value="Sí" severity="success" /> }</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="6" class="empty-row">Sin estudios</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar estudio' : 'Nuevo estudio'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field">
+        <label for="e-nivel">Nivel de estudio</label>
+        <p-select
+          inputId="e-nivel"
+          [options]="niveles()"
+          optionLabel="nombre"
+          optionValue="id"
+          formControlName="nivelEstudioId"
+          [filter]="true"
+          [showClear]="true"
+          placeholder="Seleccione…"
+        />
+      </div>
+      <div class="field">
+        <label for="e-titulo">Título *</label>
+        <input pInputText id="e-titulo" formControlName="titulo" />
+      </div>
+      <div class="field col-2">
+        <label for="e-inst">Institución</label>
+        <input pInputText id="e-inst" formControlName="institucion" />
+      </div>
+      <div class="field">
+        <label for="e-fi">Fecha inicial</label>
+        <input pInputText id="e-fi" type="date" formControlName="fechaInicial" />
+      </div>
+      <div class="field">
+        <label for="e-ff">Fecha final</label>
+        <input pInputText id="e-ff" type="date" formControlName="fechaFinal" />
+      </div>
+      <div class="field">
+        <label for="e-fg">Fecha de grado</label>
+        <input pInputText id="e-fg" type="date" formControlName="fechaGrado" />
+      </div>
+      <div class="field">
+        <label for="e-tp">N.º tarjeta profesional</label>
+        <input pInputText id="e-tp" formControlName="numeroTarjetaProfesional" />
+      </div>
+      <div class="field">
+        <label for="e-sem">Semestres aprobados</label>
+        <p-inputNumber inputId="e-sem" formControlName="semestresAprobados" [min]="0" [max]="20" />
+      </div>
+      <div class="sat-check">
+        <p-checkbox formControlName="convalidado" [binary]="true" inputId="e-conv" />
+        <label for="e-conv">Convalidado</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

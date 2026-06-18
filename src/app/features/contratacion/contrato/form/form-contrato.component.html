@@ -1,0 +1,121 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="volver()" />
+      <span class="head-icon"><i class="pi pi-file-edit"></i></span>
+      <div>
+        <h1 class="head-title">{{ isEdit() ? 'Editar contrato' : 'Nuevo contrato' }}</h1>
+        <p class="head-sub">Datos generales, cláusulas y contratista</p>
+      </div>
+    </div>
+    <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </header>
+
+  <form [formGroup]="frm" class="form-card">
+    <div class="grid-2">
+      <div class="field">
+        <label for="ct-nombre">Nombre</label>
+        <input pInputText id="ct-nombre" formControlName="nombre" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ct-numero">Número</label>
+        <input pInputText id="ct-numero" formControlName="numero" class="w-full" />
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label for="ct-tipo">Tipo de contrato</label>
+        <input pInputText id="ct-tipo" formControlName="tipoContrato" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ct-modalidad">Modalidad</label>
+        <p-select
+          inputId="ct-modalidad"
+          formControlName="modalidadId"
+          [options]="modalidades()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="Seleccionar"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="ct-valor">Valor</label>
+        <p-inputNumber inputId="ct-valor" formControlName="valor" mode="decimal" [minFractionDigits]="0" styleClass="w-full" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Contratista</label>
+      <div class="selector-row">
+        <span class="selector-value">{{ contratistaNombre() ?? 'Sin contratista' }}</span>
+        <p-button label="Seleccionar" icon="pi pi-search" [text]="true" (onClick)="openSelector()" />
+        @if (contratistaNombre()) {
+          <p-button icon="pi pi-times" severity="secondary" [text]="true" (onClick)="limpiarContratista()" />
+        }
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="ct-ini">Fecha inicio</label>
+        <input pInputText id="ct-ini" type="date" formControlName="fechaInicio" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ct-fin">Fecha fin</label>
+        <input pInputText id="ct-fin" type="date" formControlName="fechaFin" class="w-full" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="ct-objeto">Objeto</label>
+      <textarea pTextarea id="ct-objeto" formControlName="objeto" rows="3" class="w-full"></textarea>
+    </div>
+  </form>
+
+  <section class="form-card">
+    <div class="block-head">
+      <h2><i class="pi pi-list"></i> Cláusulas</h2>
+      <p-button label="Agregar cláusula" icon="pi pi-plus" size="small" [text]="true" (onClick)="agregarClausula()" />
+    </div>
+
+    @if (clausulas().length === 0) {
+      <p class="empty-row">Sin cláusulas. Agrega las que apliquen al contrato.</p>
+    }
+
+    @for (cl of clausulas(); track cl._id) {
+      <div class="clausula">
+        <div class="clausula-grid">
+          <div class="field small">
+            <label>N°</label>
+            <input pInputText [(ngModel)]="cl.numero" [ngModelOptions]="{ standalone: true }" class="w-full" />
+          </div>
+          <div class="field small">
+            <label>Orden</label>
+            <input pInputText [(ngModel)]="cl.orden" [ngModelOptions]="{ standalone: true }" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Nombre</label>
+            <input pInputText [(ngModel)]="cl.nombre" [ngModelOptions]="{ standalone: true }" class="w-full" />
+          </div>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="quitarClausula(cl._id)"></button>
+        </div>
+        <div class="field">
+          <label>Texto</label>
+          <textarea pTextarea [(ngModel)]="cl.texto" [ngModelOptions]="{ standalone: true }" rows="2" class="w-full"></textarea>
+        </div>
+      </div>
+    }
+  </section>
+</div>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar contratista"
+  (selected)="onContratistaSelected($event)"
+/>

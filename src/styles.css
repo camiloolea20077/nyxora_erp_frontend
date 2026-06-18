@@ -115,7 +115,7 @@ body {
   background: var(--nx-surface);
   border: 1px solid var(--nx-border);
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Todas las tablas muestran los datos en MAYÚSCULA (solo visual; el dato no cambia) */
@@ -188,4 +188,10 @@ body {
 }
 .sat-check label {
   font-size: 0.82rem;
+}
+.card {
+  overflow: visible;
+}
+:host ::ng-deep .p-paginator-rpp-dropdown .p-select-overlay {
+  position: fixed !important;
 }

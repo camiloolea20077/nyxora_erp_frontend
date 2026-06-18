@@ -1,0 +1,138 @@
+@if (contrato(); as c) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="volver()" />
+        <span class="head-icon"><i class="pi pi-file-edit"></i></span>
+        <div>
+          <h1 class="head-title">{{ c.numero ? c.numero + ' · ' : '' }}{{ c.nombre }}</h1>
+          <p class="head-sub">{{ c.modalidadNombre ?? 'Contrato' }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="c.estado" [severity]="estadoSeverity(c.estado)" />
+        <p-button label="Cambiar estado" icon="pi pi-sync" size="small" [text]="true" (onClick)="abrirEstado()" />
+        <p-button label="Editar" icon="pi pi-pencil" size="small" [outlined]="true" (onClick)="editar()" />
+      </div>
+    </header>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-label">Contratista</span>
+        <span class="card-value">{{ c.contratistaNombre ?? '—' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Valor</span>
+        <span class="card-value strong">{{ c.valor | number: '1.0-0' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Vigencia</span>
+        <span class="card-value">{{ c.fechaInicio ?? '—' }} → {{ c.fechaFin ?? '—' }}</span>
+      </div>
+    </div>
+
+    @if (c.objeto) {
+      <section class="block">
+        <h2><i class="pi pi-align-left"></i> Objeto</h2>
+        <p class="objeto">{{ c.objeto }}</p>
+      </section>
+    }
+
+    <!-- Cláusulas -->
+    <section class="block">
+      <div class="block-head">
+        <h2><i class="pi pi-list"></i> Cláusulas</h2>
+      </div>
+      <p-table [value]="clausulas()" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 6rem">N°</th>
+            <th style="width: 14rem">Nombre</th>
+            <th>Texto</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cl>
+          <tr>
+            <td class="nx-mono">{{ cl.numero }}</td>
+            <td>{{ cl.nombre }}</td>
+            <td>{{ cl.texto }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="3" class="empty-row">Sin cláusulas registradas</td></tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <!-- Pólizas -->
+    <section class="block">
+      <div class="block-head">
+        <h2><i class="pi pi-shield"></i> Pólizas</h2>
+        <p-button label="Asignar" icon="pi pi-plus" size="small" [text]="true" (onClick)="abrirPoliza()" />
+      </div>
+      <p-table [value]="polizas()" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 16rem">Número</th>
+            <th>Tipo</th>
+            <th style="width: 12rem" class="text-right">Valor asegurado</th>
+            <th style="width: 6rem" class="text-center">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-p>
+          <tr>
+            <td class="nx-mono">{{ p.numero }}</td>
+            <td>{{ p.tipo }}</td>
+            <td class="text-right">{{ p.valorAsegurado | number: '1.0-0' }}</td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="removerPoliza(p.polizaSeguroId, p.numero)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="4" class="empty-row">Sin pólizas asignadas</td></tr>
+        </ng-template>
+      </p-table>
+    </section>
+  </div>
+}
+
+<p-confirmDialog />
+
+<!-- Dialog cambiar estado -->
+<p-dialog header="Cambiar estado" [visible]="showEstadoDialog()" (visibleChange)="showEstadoDialog.set($event)" [modal]="true" [style]="{ width: '420px' }" [draggable]="false">
+  <div class="dialog-form">
+    <div class="field">
+      <label for="ce-estado">Estado</label>
+      <p-select inputId="ce-estado" [(ngModel)]="estadoSeleccionado" [options]="estados" optionLabel="label" optionValue="value" styleClass="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showEstadoDialog.set(false)" />
+    <p-button label="Guardar" icon="pi pi-check" [loading]="guardandoEstado()" (onClick)="cambiarEstado()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Dialog asignar póliza -->
+<p-dialog header="Asignar póliza" [visible]="showPolizaDialog()" (visibleChange)="showPolizaDialog.set($event)" [modal]="true" [style]="{ width: '440px' }" [draggable]="false">
+  <div class="dialog-form">
+    <div class="field">
+      <label for="cp-poliza">Póliza</label>
+      <p-select
+        inputId="cp-poliza"
+        [(ngModel)]="polizaSeleccionada"
+        [options]="polizaOptions()"
+        optionLabel="numero"
+        optionValue="id"
+        [filter]="true"
+        filterBy="numero,tipo"
+        placeholder="Selecciona una póliza"
+        styleClass="w-full"
+      />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showPolizaDialog.set(false)" />
+    <p-button label="Asignar" icon="pi pi-check" [loading]="guardandoPoliza()" (onClick)="asignarPoliza()" />
+  </ng-template>
+</p-dialog>

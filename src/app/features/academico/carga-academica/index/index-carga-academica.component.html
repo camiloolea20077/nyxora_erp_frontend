@@ -1,0 +1,73 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-calendar"></i></span>
+      <div>
+        <h1 class="head-title">Carga docente</h1>
+        <p class="head-sub">Carga académica y traslado de horas a nómina</p>
+      </div>
+    </div>
+    <p-button label="Nueva carga" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Docente</th>
+          <th style="width: 12rem">N.º acto</th>
+          <th style="width: 10rem">Fecha acto</th>
+          <th style="width: 8rem">Estado</th>
+          <th style="width: 15rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.docenteNombre }}</td>
+          <td class="nx-mono">{{ row.numeroActoAdministrativo }}</td>
+          <td>{{ row.fechaActoAdministrativo }}</td>
+          <td><p-tag [value]="row.active ? 'Activo' : 'Inactivo'" [severity]="row.active ? 'success' : 'danger'" /></td>
+          <td class="text-center">
+            <p-button label="A nómina" icon="pi pi-dollar" size="small" [text]="true" (onClick)="abrirNovedad(row)" />
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin cargas registradas</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-carga-academica [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />
+
+<p-dialog header="Trasladar a nómina" [visible]="showNovedad()" (visibleChange)="showNovedad.set($event)" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false">
+  <div class="dlg">
+    <p class="hint">Se registrará una novedad por (total horas × valor por hora) en la vinculación del docente.</p>
+    <div class="field">
+      <label for="nv-concepto">Concepto (devengado)</label>
+      <p-select inputId="nv-concepto" appendTo="body" [options]="conceptos()" optionLabel="nombre" optionValue="id" [(ngModel)]="conceptoNominaId" [filter]="true" placeholder="Seleccione…" />
+    </div>
+    <div class="field">
+      <label for="nv-valor">Valor por hora</label>
+      <p-inputNumber inputId="nv-valor" [(ngModel)]="valorHora" mode="currency" currency="COP" locale="es-CO" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showNovedad.set(false)" />
+    <p-button label="Generar novedad" icon="pi pi-check" [loading]="working()" (onClick)="confirmarNovedad()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,79 @@
+.head-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.cab {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field.col-2 {
+  grid-column: span 2;
+}
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.lines-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.lines-head h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+table.lines {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.lines th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--nx-muted);
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--nx-border);
+}
+table.lines td {
+  padding: 0.3rem 0.4rem;
+  vertical-align: top;
+}
+table.lines tfoot td {
+  padding: 0.5rem;
+}
+.r {
+  text-align: right;
+}
+.b {
+  font-weight: 700;
+}
+.hint {
+  font-size: 0.8rem;
+  color: var(--nx-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}

@@ -1,0 +1,47 @@
+@if (obligacion(); as o) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-money-bill"></i></span>
+        <div>
+          <h1 class="head-title">Obligación {{ o.numero ?? '#' + o.id }}</h1>
+          <p class="head-sub">{{ o.fecha }} · proveedor #{{ o.proveedorId }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="o.estado" />
+        @if (o.estado === 'pendiente') {
+          <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="totales">
+        <div><span>Valor total</span><b class="nx-mono">{{ o.valorTotal | number: '1.2-2' }}</b></div>
+        <div class="grand"><span>Saldo</span><b class="nx-mono">{{ o.saldo | number: '1.2-2' }}</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="lines-title">Retenciones</h3>
+      <table class="lines">
+        <thead>
+          <tr><th>Impuesto</th><th class="r">Base</th><th class="r">Valor</th></tr>
+        </thead>
+        <tbody>
+          @for (r of o.retenciones; track r.id) {
+            <tr>
+              <td class="nx-mono">#{{ r.impuestoId }}</td>
+              <td class="r nx-mono">{{ r.base | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ r.valor | number: '1.2-2' }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="3" class="empty">Sin retenciones</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

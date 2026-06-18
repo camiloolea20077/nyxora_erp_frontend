@@ -1,0 +1,43 @@
+@if (acuerdo(); as a) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-calendar-plus"></i></span>
+        <div>
+          <h1 class="head-title">Acuerdo #{{ a.id }}</h1>
+          <p class="head-sub">{{ a.fecha }} · CxC #{{ a.cuentaPorCobrarId }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="a.estado" />
+        @if (a.estado === 'vigente') {
+          <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <table class="lines">
+        <thead>
+          <tr>
+            <th style="width: 6rem">Cuota</th>
+            <th class="r">Valor</th>
+            <th style="width: 14rem">Fecha aplicación</th>
+            <th style="width: 9rem">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of a.cuotas; track c.id) {
+            <tr>
+              <td class="nx-mono">{{ c.numeroCuota }}</td>
+              <td class="r nx-mono">{{ c.valor | number: '1.2-2' }}</td>
+              <td>{{ c.fechaAplicacion }}</td>
+              <td><p-tag [value]="c.estado" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

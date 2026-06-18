@@ -1,0 +1,52 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar CPC' : 'Nuevo CPC'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="cpc-codigo">Código</label>
+      <input
+        pInputText
+        id="cpc-codigo"
+        formControlName="codigo"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('codigo')"
+      />
+      @if (isInvalid('codigo')) {
+        <small class="error">El código es obligatorio</small>
+      }
+    </div>
+    <div class="field">
+      <label for="cpc-nombre">Nombre</label>
+      <input
+        pInputText
+        id="cpc-nombre"
+        formControlName="nombre"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('nombre')"
+      />
+      @if (isInvalid('nombre')) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </div>
+    <div class="field-check">
+      <p-checkbox inputId="cpc-mov" formControlName="manejaMovimiento" [binary]="true" />
+      <label for="cpc-mov">Maneja movimiento (imputable)</label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

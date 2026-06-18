@@ -1,0 +1,33 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.75rem;
+}
+.field-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.field-check label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.w-full {
+  width: 100%;
+}

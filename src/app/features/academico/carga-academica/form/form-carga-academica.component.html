@@ -1,0 +1,65 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar carga docente' : 'Nueva carga docente'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '720px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid3">
+      <div class="field col-1">
+        <label for="c-vin">Docente (vinculación)</label>
+        <p-select inputId="c-vin" appendTo="body" [options]="vinculaciones()" optionLabel="empleadoNombre" optionValue="id" formControlName="vinculacionId" [filter]="true" filterBy="empleadoNombre,codigo" placeholder="Seleccione…" [class.ng-invalid]="isInvalid('vinculacionId')" />
+        @if (isInvalid('vinculacionId')) { <small class="error">El docente es obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="c-acto">N.º acto administrativo</label>
+        <input pInputText id="c-acto" formControlName="numeroActoAdministrativo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="c-facto">Fecha del acto</label>
+        <input pInputText id="c-facto" type="date" formControlName="fechaActoAdministrativo" class="w-full" />
+      </div>
+    </div>
+
+    <div class="lineas">
+      <div class="lineas-head">
+        <h4>Detalle (grupo · horas)</h4>
+        <p-button label="Agregar línea" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregarLinea()" />
+      </div>
+      <p-table [value]="lineas()" dataKey="$index">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Grupo</th>
+            <th style="width: 9rem">Horas</th>
+            <th style="width: 4rem"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-linea let-i="rowIndex">
+          <tr>
+            <td>
+              <p-select appendTo="body" [options]="grupos()" optionLabel="nombre" optionValue="id" [ngModel]="linea.grupoAcademicoId" (ngModelChange)="setGrupo(i, $event)" [ngModelOptions]="{ standalone: true }" [filter]="true" [showClear]="true" placeholder="Grupo…" styleClass="w-full" />
+            </td>
+            <td>
+              <p-inputNumber [ngModel]="linea.horas" (ngModelChange)="setHoras(i, $event)" [ngModelOptions]="{ standalone: true }" [min]="0" [maxFractionDigits]="2" />
+            </td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarLinea(i)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="3" class="empty-row">Sin líneas. Agregue al menos una.</td></tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

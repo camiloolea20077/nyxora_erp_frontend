@@ -1,0 +1,229 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar activo fijo' : 'Nuevo activo fijo'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '760px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid-2">
+      <div class="field">
+        <label for="af-codigo">Código</label>
+        <input
+          pInputText
+          id="af-codigo"
+          formControlName="codigo"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('codigo')"
+        />
+        @if (isInvalid('codigo')) {
+          <small class="error">El código es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="af-nombre">Nombre</label>
+        <input
+          pInputText
+          id="af-nombre"
+          formControlName="nombre"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('nombre')"
+        />
+        @if (isInvalid('nombre')) {
+          <small class="error">El nombre es obligatorio</small>
+        }
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label for="af-serie">Número de serie</label>
+        <input pInputText id="af-serie" formControlName="numeroSerie" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="af-modelo">Modelo</label>
+        <input pInputText id="af-modelo" formControlName="modelo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="af-estado">Estado</label>
+        <p-select
+          inputId="af-estado"
+          formControlName="estadoActivo"
+          [options]="estados"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Proveedor</label>
+      <div class="selector-row">
+        <span class="selector-value">{{ proveedorNombre() ?? 'Sin proveedor' }}</span>
+        <p-button
+          label="Seleccionar"
+          icon="pi pi-search"
+          [text]="true"
+          (onClick)="openSelector()"
+        />
+        @if (proveedorNombre()) {
+          <p-button
+            icon="pi pi-times"
+            severity="secondary"
+            [text]="true"
+            (onClick)="limpiarProveedor()"
+          />
+        }
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label for="af-numfac">N° factura</label>
+        <input pInputText id="af-numfac" formControlName="numeroFactura" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="af-fecfac">Fecha factura</label>
+        <input
+          pInputText
+          id="af-fecfac"
+          type="date"
+          formControlName="fechaFactura"
+          class="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-vida">Vida útil (meses)</label>
+        <p-inputNumber inputId="af-vida" formControlName="vidaUtil" [min]="0" styleClass="w-full" />
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label for="af-compra">Valor de compra</label>
+        <p-inputNumber
+          inputId="af-compra"
+          formControlName="valorCompra"
+          mode="decimal"
+          [minFractionDigits]="0"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-salv">Valor de salvamento</label>
+        <p-inputNumber
+          inputId="af-salv"
+          formControlName="valorSalvamento"
+          mode="decimal"
+          [minFractionDigits]="0"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-psalv">% salvamento</label>
+        <p-inputNumber
+          inputId="af-psalv"
+          formControlName="porcentajeSalvamento"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="4"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label for="af-det">Deterioro</label>
+        <p-inputNumber
+          inputId="af-det"
+          formControlName="deterioro"
+          mode="decimal"
+          [minFractionDigits]="0"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-aval">Avalúo</label>
+        <p-inputNumber
+          inputId="af-aval"
+          formControlName="avaluo"
+          mode="decimal"
+          [minFractionDigits]="0"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-cap">Capitalizado</label>
+        <p-inputNumber
+          inputId="af-cap"
+          formControlName="capitalizado"
+          mode="decimal"
+          [minFractionDigits]="0"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="af-metodo">Método de depreciación</label>
+        <p-select
+          inputId="af-metodo"
+          formControlName="metodoDepreciacion"
+          [options]="metodos"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="true"
+          styleClass="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="af-tipodep">Tipo de depreciación</label>
+        <input pInputText id="af-tipodep" formControlName="tipoDepreciacion" class="w-full" />
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="af-unspsc">Código UNSPSC</label>
+        <input pInputText id="af-unspsc" formControlName="codigoUnspsc" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="af-barra">Código de barras</label>
+        <input pInputText id="af-barra" formControlName="codigoBarra" class="w-full" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="af-desc">Descripción</label>
+      <textarea
+        pTextarea
+        id="af-desc"
+        formControlName="descripcion"
+        rows="2"
+        class="w-full"
+      ></textarea>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar proveedor"
+  (selected)="onProveedorSelected($event)"
+/>

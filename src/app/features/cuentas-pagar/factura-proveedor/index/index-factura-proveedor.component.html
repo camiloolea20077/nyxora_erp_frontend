@@ -1,0 +1,70 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-file-import"></i></span>
+      <div>
+        <h1 class="head-title">Facturas de proveedor</h1>
+        <p class="head-sub">Recepción de facturas electrónicas (DIAN/RADIAN)</p>
+      </div>
+    </div>
+    <p-button label="Nueva factura" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 14rem">Documento</th>
+          <th style="width: 9rem">Proveedor</th>
+          <th style="width: 9rem">Recepción</th>
+          <th style="width: 12rem" class="r">Valor</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 10rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.numeroDocumento }}</td>
+          <td class="nx-mono">#{{ row.proveedorId }}</td>
+          <td>{{ row.fechaRecepcion }}</td>
+          <td class="r nx-mono">{{ row.valorFactura | number: '1.2-2' }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+          <td class="text-center">
+            <button
+              pButton
+              icon="pi pi-eye"
+              [text]="true"
+              pTooltip="Ver"
+              (click)="ver(row)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              [text]="true"
+              severity="danger"
+              pTooltip="Eliminar"
+              (click)="eliminar(row)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="empty-row">Sin facturas de proveedor</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />

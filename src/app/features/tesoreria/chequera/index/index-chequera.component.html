@@ -1,0 +1,56 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-book"></i></span>
+      <div>
+        <h1 class="head-title">Chequeras</h1>
+        <p class="head-sub">Talonarios por cuenta bancaria</p>
+      </div>
+    </div>
+    <p-button label="Nueva chequera" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cuenta bancaria</th>
+          <th style="width: 11rem">Expedición</th>
+          <th style="width: 9rem" class="r">Inicial</th>
+          <th style="width: 9rem" class="r">Final</th>
+          <th style="width: 10rem" class="r">Consecutivo actual</th>
+          <th style="width: 9rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ cuenta(row.cuentaBancariaId) }}</td>
+          <td>{{ row.fechaExpedicion }}</td>
+          <td class="r nx-mono">{{ row.numeroInicial }}</td>
+          <td class="r nx-mono">{{ row.numeroFinal }}</td>
+          <td class="r nx-mono">{{ row.consecutivoActual }}</td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" pTooltip="Editar" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">Sin chequeras</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-chequera [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />

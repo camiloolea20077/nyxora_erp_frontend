@@ -1,0 +1,35 @@
+.r {
+  text-align: right;
+}
+.b {
+  font-weight: 700;
+}
+.neg {
+  color: var(--nx-danger);
+}
+.conf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.w-full {
+  width: 100%;
+}
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.6rem 1rem;
+}

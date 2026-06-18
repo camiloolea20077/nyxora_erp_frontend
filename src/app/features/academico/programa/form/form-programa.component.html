@@ -1,0 +1,45 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar programa' : 'Nuevo programa académico'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '620px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="p-codigo">Código</label>
+        <input pInputText id="p-codigo" formControlName="codigo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="p-nombre">Nombre</label>
+        <input pInputText id="p-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="p-tipo">Tipo de programa</label>
+        <input pInputText id="p-tipo" formControlName="tipoPrograma" class="w-full" placeholder="pregrado, posgrado…" />
+      </div>
+      <div class="field">
+        <label for="p-mod">Modalidad</label>
+        <input pInputText id="p-mod" formControlName="modalidad" class="w-full" placeholder="presencial, virtual…" />
+      </div>
+      <div class="field col-2">
+        <label for="p-reg">Registro académico</label>
+        <input pInputText id="p-reg" formControlName="registroAcademico" class="w-full" />
+      </div>
+      <div class="field col-2">
+        <label for="p-desc">Descripción</label>
+        <textarea pTextarea id="p-desc" formControlName="descripcion" rows="2" class="w-full"></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

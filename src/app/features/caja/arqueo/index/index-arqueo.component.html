@@ -1,0 +1,79 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-check-square"></i></span>
+      <div>
+        <h1 class="head-title">Arqueos</h1>
+        <p class="head-sub">Cuadre de caja</p>
+      </div>
+    </div>
+    <p-button label="Nuevo arqueo" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 6rem">#</th>
+          <th style="width: 9rem">Caja</th>
+          <th>Fecha</th>
+          <th style="width: 11rem" class="r">Declarado</th>
+          <th style="width: 11rem" class="r">Sistema</th>
+          <th style="width: 11rem" class="r">Diferencia</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.id }}</td>
+          <td class="nx-mono">#{{ row.cajaId }}</td>
+          <td>{{ row.fecha }}</td>
+          <td class="r nx-mono">{{ row.valorDeclarado | number: '1.2-2' }}</td>
+          <td class="r nx-mono">{{ row.valorSistema | number: '1.2-2' }}</td>
+          <td class="r nx-mono b" [class.neg]="(row.diferencia ?? 0) < 0">{{ row.diferencia | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="6" class="empty-row">Sin arqueos</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  header="Nuevo arqueo"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '440px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="conf-form">
+    <div class="field">
+      <label>Caja</label>
+      <p-select [(ngModel)]="cajaId" [options]="cajas()" optionLabel="codigo" optionValue="id" [filter]="true" filterBy="codigo,nombre" placeholder="Selecciona…" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Valor declarado (efectivo contado)</label>
+      <p-inputNumber [(ngModel)]="valorDeclarado" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+    </div>
+    <div class="field">
+      <label>Observaciones</label>
+      <input pInputText [(ngModel)]="observaciones" class="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showForm.set(false)" />
+    <p-button label="Registrar" icon="pi pi-check" [loading]="guardando()" (onClick)="guardar()" />
+  </ng-template>
+</p-dialog>

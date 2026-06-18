@@ -1,0 +1,75 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar liquidación' : 'Nueva liquidación'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field col-2">
+        <label for="l-grupo">Grupo de nómina</label>
+        <p-select
+          inputId="l-grupo"
+          appendTo="body"
+          [options]="grupos()"
+          optionLabel="nombre"
+          optionValue="id"
+          formControlName="grupoNominaId"
+          [showClear]="true"
+          placeholder="Todos los empleados"
+        />
+      </div>
+      <div class="field">
+        <label for="l-anio">Año</label>
+        <p-inputNumber
+          inputId="l-anio"
+          formControlName="anio"
+          [useGrouping]="false"
+          [min]="2000"
+          [max]="2100"
+        />
+        @if (isInvalid('anio')) {
+          <small class="error">El año es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="l-mes">Mes</label>
+        <p-inputNumber inputId="l-mes" formControlName="mes" [min]="1" [max]="12" />
+        @if (isInvalid('mes')) {
+          <small class="error">El mes es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="l-periodo">Periodo</label>
+        <input
+          pInputText
+          id="l-periodo"
+          formControlName="periodo"
+          class="w-full"
+          placeholder="2026-06"
+        />
+      </div>
+      <div class="field">
+        <label for="l-fecha">Fecha</label>
+        <input pInputText id="l-fecha" type="date" formControlName="fecha" class="w-full" />
+        @if (isInvalid('fecha')) {
+          <small class="error">La fecha es obligatoria</small>
+        }
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,73 @@
+.head-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.grid span {
+  font-size: 0.75rem;
+  color: var(--nx-muted);
+}
+.lines-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+table.lines {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.lines th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--nx-muted);
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--nx-border);
+}
+table.lines td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--nx-border);
+  font-size: 0.88rem;
+}
+.empty {
+  color: var(--nx-muted);
+  text-align: center;
+}
+.conf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.w-full {
+  width: 100%;
+}
+:host ::ng-deep .p-select {
+  width: 100%;
+}

@@ -1,0 +1,211 @@
+@if (factura(); as f) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-file"></i></span>
+        <div>
+          <h1 class="head-title">Factura {{ f.numero ?? '(sin numerar)' }}</h1>
+          <p class="head-sub">{{ f.fecha }} · {{ clienteNombre() }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="f.estado" />
+        @if (f.estado === 'borrador') {
+          <p-button label="Emitir" icon="pi pi-send" severity="success" (onClick)="abrirEmitir()" />
+        }
+        @if (f.estado === 'emitida') {
+          <p-button
+            label="Factura electrónica"
+            icon="pi pi-verified"
+            [outlined]="true"
+            (onClick)="abrirDian()"
+          />
+        }
+        @if (f.estado === 'borrador' || f.estado === 'emitida') {
+          <p-button
+            label="Anular"
+            icon="pi pi-ban"
+            severity="danger"
+            [outlined]="true"
+            (onClick)="anular()"
+          />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th class="r">Cantidad</th>
+            <th class="r">Vr. unitario</th>
+            <th class="r">Dcto</th>
+            <th class="r">Impuesto</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (l of f.lineas; track l.id) {
+            <tr>
+              <td>{{ producto(l.productoId) }}</td>
+              <td>{{ l.descripcion }}</td>
+              <td class="r nx-mono">{{ l.cantidad | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.valorUnitario | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.descuentoValor | number: '1.2-2' }}</td>
+              <td class="r nx-mono">{{ l.valorImpuesto | number: '1.2-2' }}</td>
+              <td class="r nx-mono b">{{ l.total | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="totales">
+        <div>
+          <span>Subtotal</span><b class="nx-mono">{{ f.subtotal | number: '1.2-2' }}</b>
+        </div>
+        <div>
+          <span>Descuento</span><b class="nx-mono">{{ f.descuento | number: '1.2-2' }}</b>
+        </div>
+        <div>
+          <span>Impuestos</span><b class="nx-mono">{{ f.impuestos | number: '1.2-2' }}</b>
+        </div>
+        <div class="grand">
+          <span>Total</span><b class="nx-mono">{{ f.total | number: '1.2-2' }}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Emitir -->
+<p-dialog
+  header="Emitir factura"
+  [visible]="showEmitir()"
+  (visibleChange)="showEmitir.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="subtitle">
+    Se numera por la resolución DIAN y se descuenta el inventario. Las cuentas y el periodo son
+    opcionales: complétalos para generar también el asiento contable.
+  </p>
+  <div class="conf-form">
+    <div class="field">
+      <label>Cuenta CxC cliente</label>
+      <p-select
+        [(ngModel)]="cuentaClienteId"
+        [options]="cuentas()"
+        optionLabel="nombreCuenta"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombreCuenta,codigoCuenta"
+        [showClear]="true"
+        placeholder="(Opcional)"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label>Cuenta de ingreso</label>
+      <p-select
+        [(ngModel)]="cuentaIngresoId"
+        [options]="cuentas()"
+        optionLabel="nombreCuenta"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombreCuenta,codigoCuenta"
+        [showClear]="true"
+        placeholder="(Opcional)"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label>Cuenta IVA generado</label>
+      <p-select
+        [(ngModel)]="cuentaImpuestoId"
+        [options]="cuentas()"
+        optionLabel="nombreCuenta"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombreCuenta,codigoCuenta"
+        [showClear]="true"
+        placeholder="(Opcional, si hay IVA)"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label>Periodo contable</label>
+      <p-select
+        [(ngModel)]="periodoContableId"
+        [options]="periodoOpts()"
+        optionLabel="label"
+        optionValue="id"
+        [showClear]="true"
+        placeholder="(Opcional)"
+        appendTo="body"
+      />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [text]="true"
+      (onClick)="showEmitir.set(false)"
+    />
+    <p-button label="Emitir" icon="pi pi-send" [loading]="emitiendo()" (onClick)="emitir()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Factura electrónica -->
+<p-dialog
+  header="Factura electrónica (DIAN)"
+  [visible]="showDian()"
+  (visibleChange)="showDian.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="conf-form">
+    <div class="field">
+      <label>CUFE</label>
+      <input pInputText [(ngModel)]="cufe" class="w-full" placeholder="Código único de la FE" />
+    </div>
+    <div class="field">
+      <label>Estado DIAN</label>
+      <p-select
+        [(ngModel)]="estadoDian"
+        [options]="estadoDianOpts"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Selecciona…"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label>Fecha de acuse</label>
+      <input pInputText type="date" [(ngModel)]="fechaAcuse" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Comentario del acuse</label>
+      <input pInputText [(ngModel)]="comentarioAcuse" class="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showDian.set(false)" />
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      [loading]="guardandoDian()"
+      (onClick)="guardarDian()"
+    />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />

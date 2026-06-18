@@ -95,7 +95,8 @@ export class FormOrdenCompraComponent {
   readonly lineas = signal<Linea[]>([]);
   readonly subtotal = signal(0);
   readonly descuento = signal(0);
-  readonly neto = computed(() => this.subtotal() - this.descuento());
+  readonly impuesto = signal(0);
+  readonly total = computed(() => this.subtotal() - this.descuento() + this.impuesto());
 
   readonly frm = this.fb.group({
     sedeId: this.fb.control<number | null>(null),
@@ -106,7 +107,9 @@ export class FormOrdenCompraComponent {
     bodegaId: this.fb.control<number | null>(null),
     centroCostoId: this.fb.control<number | null>(null),
     condicionPagoId: this.fb.control<number | null>(null),
-    fecha: this.fb.control<string | null>(new Date().toISOString().slice(0, 10), [Validators.required]),
+    fecha: this.fb.control<string | null>(new Date().toISOString().slice(0, 10), [
+      Validators.required,
+    ]),
     fechaEntrega: this.fb.control<string | null>(null),
     observaciones: this.fb.control<string | null>(null),
   });
@@ -209,7 +212,15 @@ export class FormOrdenCompraComponent {
   agregar(): void {
     this.lineas.update((arr) => [
       ...arr,
-      { _id: ++this.seq, productoId: null, descripcion: null, cantidad: 1, valorUnitario: 0, descuentoPorcentaje: 0, impuestoId: null },
+      {
+        _id: ++this.seq,
+        productoId: null,
+        descripcion: null,
+        cantidad: 1,
+        valorUnitario: 0,
+        descuentoPorcentaje: 0,
+        impuestoId: null,
+      },
     ]);
   }
   quitar(id: number): void {
@@ -217,21 +228,39 @@ export class FormOrdenCompraComponent {
     this.recalc();
   }
 
+  private impuestoDe(id: number | null): ImpuestoTableModel | undefined {
+    return id == null ? undefined : this.impuestos().find((i) => i.id === id);
+  }
+
+  /** Monto del impuesto de la línea (en $); negativo si es retención. */
+  private impuestoLinea(l: Linea, baseGravable: number): number {
+    const imp = this.impuestoDe(l.impuestoId);
+    if (!imp?.tarifa) return 0;
+    const monto = baseGravable * (imp.tarifa / 100);
+    return imp.tipo === 'retencion' ? -monto : monto;
+  }
+
+  /** Neto de la línea con impuesto incluido (base − descuento ± impuesto). */
   lineaNeto(l: Linea): number {
     const base = (l.cantidad ?? 0) * (l.valorUnitario ?? 0);
-    return base * (1 - (l.descuentoPorcentaje ?? 0) / 100);
+    const baseGravable = base * (1 - (l.descuentoPorcentaje ?? 0) / 100);
+    return baseGravable + this.impuestoLinea(l, baseGravable);
   }
 
   recalc(): void {
     let sub = 0;
     let desc = 0;
+    let imp = 0;
     for (const l of this.lineas()) {
       const base = (l.cantidad ?? 0) * (l.valorUnitario ?? 0);
+      const d = base * ((l.descuentoPorcentaje ?? 0) / 100);
       sub += base;
-      desc += base * ((l.descuentoPorcentaje ?? 0) / 100);
+      desc += d;
+      imp += this.impuestoLinea(l, base - d);
     }
     this.subtotal.set(sub);
     this.descuento.set(desc);
+    this.impuesto.set(imp);
   }
 
   volver(): void {

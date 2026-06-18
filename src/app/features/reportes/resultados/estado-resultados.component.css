@@ -1,0 +1,89 @@
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.kpi {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.kpi.ok {
+  border-color: var(--nx-success);
+}
+.kpi.bad {
+  border-color: var(--nx-danger);
+}
+.k-label {
+  font-size: 0.8rem;
+  color: var(--nx-muted);
+}
+.k-val {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--nx-text);
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.panel {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+}
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--nx-text);
+  margin: 0 0 0.75rem;
+}
+.panel-title .tot {
+  font-family: var(--nx-mono, monospace);
+  font-size: 0.9rem;
+}
+.text-right {
+  text-align: right;
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  padding: 0.75rem;
+}
+.hint-box {
+  background: var(--nx-surface);
+  border: 1px dashed var(--nx-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: var(--nx-muted);
+  text-align: center;
+}
+:host ::ng-deep .sel {
+  min-width: 16rem;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+}
+@media (max-width: 1100px) {
+  .grid-2,
+  .resumen {
+    grid-template-columns: 1fr;
+  }
+}

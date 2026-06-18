@@ -1,0 +1,132 @@
+@if (factura(); as f) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-file-import"></i></span>
+        <div>
+          <h1 class="head-title">Factura {{ f.numeroDocumento ?? '#' + f.id }}</h1>
+          <p class="head-sub">{{ f.fechaRecepcion }} · proveedor #{{ f.proveedorId }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="f.estado" />
+        <p-button
+          label="Registrar evento"
+          icon="pi pi-bolt"
+          [outlined]="true"
+          (onClick)="abrirEvento()"
+        />
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <span>Valor</span><b class="nx-mono">{{ f.valorFactura | number: '1.2-2' }}</b>
+        </div>
+        <div>
+          <span>CUFE</span><b class="nx-mono">{{ f.cufe || '—' }}</b>
+        </div>
+        <div>
+          <span>Email remitente</span><b>{{ f.emailRemitente || '—' }}</b>
+        </div>
+        <div>
+          <span>PDF</span><b>{{ f.pdfUrl || '—' }}</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="lines-title">Eventos RADIAN</h3>
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Fecha</th>
+            <th>CUDE</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ev of f.eventos; track ev.id) {
+            <tr>
+              <td>{{ ev.evento }}</td>
+              <td>{{ ev.fechaEvento }}</td>
+              <td class="nx-mono">{{ ev.cudeEvento || '—' }}</td>
+              <td>{{ ev.estado }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="empty">Sin eventos</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<p-dialog
+  header="Registrar evento RADIAN"
+  [visible]="showEvento()"
+  (visibleChange)="showEvento.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="conf-form">
+    <div class="field">
+      <label>Evento</label>
+      <input
+        pInputText
+        [(ngModel)]="evento"
+        class="w-full"
+        placeholder="acuse_recibo, aceptacion, reclamo…"
+      />
+    </div>
+    <div class="field">
+      <label>Fecha del evento</label>
+      <input pInputText type="date" [(ngModel)]="fechaEvento" class="w-full" />
+    </div>
+    <div class="field">
+      <label>CUDE</label>
+      <input pInputText [(ngModel)]="cudeEvento" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Nuevo estado de la factura</label>
+      <p-select
+        [(ngModel)]="estadoEvento"
+        [options]="estadoOpts"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="(No cambiar)"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label>Concepto del reclamo</label>
+      <input pInputText [(ngModel)]="conceptoReclamo" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Descripción del reclamo</label>
+      <input pInputText [(ngModel)]="descripcionReclamo" class="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [text]="true"
+      (onClick)="showEvento.set(false)"
+    />
+    <p-button
+      label="Registrar"
+      icon="pi pi-check"
+      [loading]="guardando()"
+      (onClick)="guardarEvento()"
+    />
+  </ng-template>
+</p-dialog>

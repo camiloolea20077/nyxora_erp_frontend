@@ -1,0 +1,37 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar grupo' : 'Nuevo grupo académico'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="g-prog">Programa</label>
+      <p-select inputId="g-prog" appendTo="body" [options]="programas()" optionLabel="nombre" optionValue="id" formControlName="programaAcademicoId" [filter]="true" [showClear]="true" placeholder="Seleccione…" />
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label for="g-codigo">Código</label>
+        <input pInputText id="g-codigo" formControlName="codigo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="g-periodo">Periodo</label>
+        <input pInputText id="g-periodo" formControlName="periodo" class="w-full" placeholder="2026-1" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="g-nombre">Nombre</label>
+      <input pInputText id="g-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+      @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

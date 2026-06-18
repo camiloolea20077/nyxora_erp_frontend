@@ -1,0 +1,6 @@
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}

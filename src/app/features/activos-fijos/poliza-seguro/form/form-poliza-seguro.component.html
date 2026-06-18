@@ -1,0 +1,62 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar póliza de seguro' : 'Nueva póliza de seguro'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="ps-numero">Número</label>
+      <input pInputText id="ps-numero" formControlName="numero" class="w-full" [class.ng-invalid]="isInvalid('numero')" />
+      @if (isInvalid('numero')) { <small class="error">El número es obligatorio</small> }
+    </div>
+
+    <div class="field">
+      <label>Aseguradora</label>
+      <div class="selector-row">
+        <span class="selector-value">{{ aseguradoraNombre() ?? 'Sin aseguradora' }}</span>
+        <p-button label="Seleccionar" icon="pi pi-search" [text]="true" (onClick)="openSelector()" />
+        @if (aseguradoraNombre()) {
+          <p-button icon="pi pi-times" severity="secondary" [text]="true" (onClick)="limpiarAseguradora()" />
+        }
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="ps-tipo">Tipo</label>
+        <input pInputText id="ps-tipo" formControlName="tipo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ps-valor">Valor asegurado</label>
+        <p-inputNumber inputId="ps-valor" formControlName="valorAsegurado" mode="decimal" [minFractionDigits]="0" styleClass="w-full" />
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="ps-ini">Vigencia desde</label>
+        <input pInputText id="ps-ini" type="date" formControlName="fechaInicio" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ps-fin">Vigencia hasta</label>
+        <input pInputText id="ps-fin" type="date" formControlName="fechaFin" class="w-full" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar aseguradora"
+  (selected)="onAseguradoraSelected($event)"
+/>

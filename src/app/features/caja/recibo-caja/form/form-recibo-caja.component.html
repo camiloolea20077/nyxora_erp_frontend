@@ -1,0 +1,150 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-receipt"></i></span>
+      <div>
+        <h1 class="head-title">Nuevo recibo de caja</h1>
+        <p class="head-sub">Recaudo y aplicación a cartera</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field">
+        <label for="r-caja">Caja (abierta) *</label>
+        <p-select inputId="r-caja" formControlName="cajaId" [options]="cajas()" optionLabel="codigo" optionValue="id" [filter]="true" filterBy="codigo,nombre" placeholder="Selecciona…" />
+      </div>
+      <div class="field col-2">
+        <label>Cliente</label>
+        <div class="prov-pick">
+          <span class="picked" [class.empty]="!clienteNombre()">{{ clienteNombre() || 'Ninguno seleccionado' }}</span>
+          <p-button label="Buscar" icon="pi pi-search" [text]="true" size="small" (onClick)="openSelector()" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="r-numero">Número</label>
+        <input pInputText id="r-numero" formControlName="numero" />
+      </div>
+      <div class="field">
+        <label for="r-fecha">Fecha *</label>
+        <input pInputText id="r-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field col-3">
+        <label for="r-obs">Observaciones</label>
+        <input pInputText id="r-obs" formControlName="observaciones" />
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="lines-head">
+      <h3>Medios de pago</h3>
+      <p-button label="Agregar pago" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregarPago()" />
+    </div>
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width: 40%">Forma de pago</th>
+          <th class="r">Valor</th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pago of pagos(); track pago._id) {
+          <tr>
+            <td>
+              <p-select [(ngModel)]="pago.formaPagoId" [ngModelOptions]="{ standalone: true }" [options]="formasPago()" optionLabel="nombre" optionValue="id" [showClear]="true" placeholder="(Efectivo)" appendTo="body" />
+            </td>
+            <td>
+              <p-inputNumber [(ngModel)]="pago.valor" [ngModelOptions]="{ standalone: true }" [minFractionDigits]="0" [maxFractionDigits]="2" />
+            </td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarPago(pago._id)"></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="r b">Total recibo</td>
+          <td class="r b nx-mono">{{ totalPagos() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="lines-head">
+      <h3>Aplicación a cartera</h3>
+      <p-button label="Agregar aplicación" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregarAplicacion()" />
+    </div>
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width: 45%">Cuenta por cobrar</th>
+          <th class="r">Saldo</th>
+          <th class="r">Valor a aplicar</th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ap of aplicaciones(); track ap._id) {
+          <tr>
+            <td>
+              <p-select [(ngModel)]="ap.cuentaPorCobrarId" [ngModelOptions]="{ standalone: true }" [options]="cuentasCobrar()" optionLabel="label" optionValue="id" [filter]="true" filterBy="label" [showClear]="true" placeholder="Selecciona…" appendTo="body" />
+            </td>
+            <td class="r nx-mono">{{ saldoCxc(ap.cuentaPorCobrarId) | number: '1.2-2' }}</td>
+            <td>
+              <p-inputNumber [(ngModel)]="ap.valorAplicado" [ngModelOptions]="{ standalone: true }" [minFractionDigits]="0" [maxFractionDigits]="2" />
+            </td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitarAplicacion(ap._id)"></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="hint">Sin aplicación: el recibo queda como anticipo / saldo a favor.</td></tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="r b" colspan="2">Total aplicado</td>
+          <td class="r b nx-mono">{{ totalAplicado() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 class="lines-title">Asiento contable (opcional)</h3>
+    <form [formGroup]="frm" class="cab">
+      <div class="field">
+        <label for="r-cc">Cuenta caja</label>
+        <p-select inputId="r-cc" formControlName="cuentaCajaId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+      <div class="field">
+        <label for="r-ccx">Cuenta CxC</label>
+        <p-select inputId="r-ccx" formControlName="cuentaCxcId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+      <div class="field">
+        <label for="r-per">Periodo contable</label>
+        <p-select inputId="r-per" formControlName="periodoContableId" [options]="periodoOpts()" optionLabel="label" optionValue="id" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+    </form>
+    <p class="hint"><i class="pi pi-info-circle"></i> Completa las cuentas y el periodo para generar el asiento (débito caja / crédito CxC).</p>
+  </div>
+</div>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar cliente"
+  (selected)="onClienteSelected($event)"
+/>

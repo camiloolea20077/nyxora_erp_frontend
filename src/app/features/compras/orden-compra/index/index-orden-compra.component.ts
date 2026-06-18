@@ -67,7 +67,11 @@ export class IndexOrdenCompraComponent {
     this.loading.set(true);
     try {
       const res = await lastValueFrom(
-        this.service.list({ page: this.page(), rows: this.pageSize(), search: this.search || null }),
+        this.service.list({
+          page: this.page(),
+          rows: this.pageSize(),
+          search: this.search || null,
+        }),
       );
       this.rows.set(res.data.content);
       this.total.set(res.data.total);

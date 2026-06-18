@@ -1,0 +1,44 @@
+.dialog-form {
+  padding-top: 0.5rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field.col-2 {
+  grid-column: 1 / -1;
+}
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.field .error {
+  color: var(--nx-danger);
+  font-size: 0.75rem;
+}
+.field-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.field-check.col-2 {
+  grid-column: 1 / -1;
+}
+.field-check label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.w-full {
+  width: 100%;
+}
+:host ::ng-deep .p-select {
+  width: 100%;
+}

@@ -1,0 +1,6 @@
+.r {
+  text-align: right;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.6rem 1rem;
+}

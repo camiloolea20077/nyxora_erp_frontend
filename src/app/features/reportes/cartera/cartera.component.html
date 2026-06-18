@@ -1,0 +1,39 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-money-bill"></i></span>
+      <div>
+        <h1 class="head-title">Cartera por cliente</h1>
+        <p class="head-sub">Saldo de cuentas por cobrar y porción vencida</p>
+      </div>
+    </div>
+    <p-button label="Actualizar" icon="pi pi-refresh" [text]="true" [loading]="loading()" (onClick)="load()" />
+  </header>
+
+  <div class="resumen">
+    <div class="kpi"><span class="k-label">Saldo total</span><span class="k-val">{{ totalSaldo() | number: '1.0-2' }}</span></div>
+    <div class="kpi bad"><span class="k-label">Saldo vencido</span><span class="k-val">{{ totalVencido() | number: '1.0-2' }}</span></div>
+  </div>
+
+  <div class="table-card">
+    <p-table [value]="rows()" [loading]="loading()" [paginator]="true" [rows]="15" [rowsPerPageOptions]="[15, 30, 50]" dataKey="clienteId">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th style="width: 8rem" class="text-center">Docs.</th>
+          <th style="width: 13rem" class="text-right">Saldo total</th>
+          <th style="width: 13rem" class="text-right">Saldo vencido</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td>{{ r.clienteNombre }}</td>
+          <td class="text-center">{{ r.documentos }}</td>
+          <td class="text-right">{{ r.saldoTotal | number: '1.0-2' }}</td>
+          <td class="text-right" [class.vencido]="r.saldoVencido > 0">{{ r.saldoVencido | number: '1.0-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage"><tr><td colspan="4" class="empty-row">Sin cartera pendiente</td></tr></ng-template>
+    </p-table>
+  </div>
+</div>

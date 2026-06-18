@@ -1,0 +1,54 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-chart-line"></i></span>
+      <div>
+        <h1 class="head-title">Ejecución presupuestal</h1>
+        <p class="head-sub">Apropiación vs ejecución por rubro</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <p-select
+      appendTo="body"
+      [options]="vigencias()"
+      optionLabel="label"
+      optionValue="id"
+      [(ngModel)]="vigenciaId"
+      placeholder="Vigencia…"
+      styleClass="sel"
+    />
+    <p-button label="Generar" icon="pi pi-cog" [loading]="loading()" (onClick)="generar()" />
+  </div>
+
+  <div class="table-card">
+    <p-table [value]="rows()" [loading]="loading()" [paginator]="true" [rows]="20" dataKey="rubroId">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 9rem">Código</th>
+          <th>Rubro</th>
+          <th style="width: 7rem">Tipo</th>
+          <th style="width: 12rem" class="text-right">Apropiación</th>
+          <th style="width: 12rem" class="text-right">Comprometido</th>
+          <th style="width: 11rem" class="text-right">Obligado</th>
+          <th style="width: 11rem" class="text-right">Pagado</th>
+          <th style="width: 12rem" class="text-right">Disponible</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td class="nx-mono">{{ r.codigoRubro }}</td>
+          <td>{{ r.nombreRubro }}</td>
+          <td>@if (r.tipoRubro) { <p-tag [value]="r.tipoRubro" severity="info" /> }</td>
+          <td class="text-right">{{ r.apropiacion | number: '1.0-2' }}</td>
+          <td class="text-right">{{ r.comprometido | number: '1.0-2' }}</td>
+          <td class="text-right">{{ r.obligado | number: '1.0-2' }}</td>
+          <td class="text-right">{{ r.pagado | number: '1.0-2' }}</td>
+          <td class="text-right" [class.neg]="r.disponible < 0">{{ r.disponible | number: '1.0-2' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage"><tr><td colspan="8" class="empty-row">Selecciona una vigencia y genera</td></tr></ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar plantilla de cláusula' : 'Nueva plantilla de cláusula'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="cp-nombre">Nombre</label>
+      <input pInputText id="cp-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+      @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <label for="cp-tipo">Tipo</label>
+        <input pInputText id="cp-tipo" formControlName="tipoClausula" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="cp-num">Número</label>
+        <input pInputText id="cp-num" formControlName="numero" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="cp-orden">Orden</label>
+        <input pInputText id="cp-orden" formControlName="orden" class="w-full" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="cp-texto">Texto</label>
+      <textarea pTextarea id="cp-texto" formControlName="texto" rows="5" class="w-full"></textarea>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

@@ -11,8 +11,8 @@
   </header>
 
   <div class="filtros">
-    <span class="search">
-      <i class="pi pi-search"></i>
+    <p-iconfield class="search">
+      <p-inputicon class="pi pi-search" />
       <input
         pInputText
         type="text"
@@ -20,7 +20,7 @@
         [(ngModel)]="search"
         (keyup.enter)="buscar()"
       />
-    </span>
+    </p-iconfield>
     <p-select
       [(ngModel)]="filtroTipoPersona"
       [options]="personas"

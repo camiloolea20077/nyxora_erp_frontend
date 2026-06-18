@@ -1,0 +1,94 @@
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+.filtros .field {
+  flex: 1;
+}
+.filtros .field.año {
+  max-width: 9rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nx-text);
+}
+.saldo-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.saldo-head h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+.head-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.lines-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: #f8fafc;
+  border: 1px solid var(--nx-border);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+.kpi span {
+  font-size: 0.72rem;
+  color: var(--nx-muted);
+}
+.kpi b {
+  font-size: 1rem;
+}
+.conf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.r {
+  text-align: right;
+}
+.w-full {
+  width: 100%;
+}
+.empty {
+  color: var(--nx-muted);
+  margin: 0 0 1rem;
+}
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}

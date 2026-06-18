@@ -1,0 +1,64 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-chart-bar"></i></span>
+      <div>
+        <h1 class="head-title">Balance general</h1>
+        <p class="head-sub">Activo = Pasivo + Patrimonio (por periodo)</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <p-select
+      appendTo="body"
+      [options]="periodos()"
+      optionLabel="label"
+      optionValue="id"
+      [(ngModel)]="periodoId"
+      [filter]="true"
+      placeholder="Periodo contable…"
+      styleClass="sel"
+    />
+    <p-button label="Generar" icon="pi pi-cog" [loading]="loading()" (onClick)="generar()" />
+  </div>
+
+  @if (data(); as b) {
+    <div class="resumen">
+      <div class="kpi"><span class="k-label">Total activo</span><span class="k-val">{{ b.totalActivo | number: '1.0-2' }}</span></div>
+      <div class="kpi"><span class="k-label">Pasivo + Patrimonio</span><span class="k-val">{{ b.totalPasivoPatrimonio | number: '1.0-2' }}</span></div>
+      <div class="kpi" [class.bad]="b.descuadre !== 0">
+        <span class="k-label">Descuadre</span><span class="k-val">{{ b.descuadre | number: '1.0-2' }}</span>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="panel">
+        <h3 class="panel-title">Activo <span class="tot">{{ b.totalActivo | number: '1.0-2' }}</span></h3>
+        <p-table [value]="b.activos" dataKey="codigoCuenta">
+          <ng-template pTemplate="header"><tr><th style="width:7rem">Código</th><th>Cuenta</th><th class="text-right">Saldo</th></tr></ng-template>
+          <ng-template pTemplate="body" let-r><tr><td class="nx-mono">{{ r.codigoCuenta }}</td><td>{{ r.nombreCuenta }}</td><td class="text-right">{{ r.saldo | number: '1.0-2' }}</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin movimientos</td></tr></ng-template>
+        </p-table>
+      </div>
+      <div class="panel">
+        <h3 class="panel-title">Pasivo <span class="tot">{{ b.totalPasivo | number: '1.0-2' }}</span></h3>
+        <p-table [value]="b.pasivos" dataKey="codigoCuenta">
+          <ng-template pTemplate="header"><tr><th style="width:7rem">Código</th><th>Cuenta</th><th class="text-right">Saldo</th></tr></ng-template>
+          <ng-template pTemplate="body" let-r><tr><td class="nx-mono">{{ r.codigoCuenta }}</td><td>{{ r.nombreCuenta }}</td><td class="text-right">{{ r.saldo | number: '1.0-2' }}</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin movimientos</td></tr></ng-template>
+        </p-table>
+      </div>
+      <div class="panel">
+        <h3 class="panel-title">Patrimonio <span class="tot">{{ b.totalPatrimonio | number: '1.0-2' }}</span></h3>
+        <p-table [value]="b.patrimonio" dataKey="codigoCuenta">
+          <ng-template pTemplate="header"><tr><th style="width:7rem">Código</th><th>Cuenta</th><th class="text-right">Saldo</th></tr></ng-template>
+          <ng-template pTemplate="body" let-r><tr><td class="nx-mono">{{ r.codigoCuenta }}</td><td>{{ r.nombreCuenta }}</td><td class="text-right">{{ r.saldo | number: '1.0-2' }}</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin movimientos</td></tr></ng-template>
+        </p-table>
+      </div>
+    </div>
+  } @else {
+    <div class="hint-box">Selecciona un periodo y genera el balance. Recalcula los saldos (o cierra el periodo) para datos al día.</div>
+  }
+</div>

@@ -1,0 +1,96 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-list"></i></span>
+      <div>
+        <h1 class="head-title">Conceptos de nómina</h1>
+        <p class="head-sub">Devengados, deducciones, provisiones y aportes (con fórmula)</p>
+      </div>
+    </div>
+    <p-button label="Nuevo concepto" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="text"
+        placeholder="Buscar…"
+        [(ngModel)]="search"
+        (keyup.enter)="onSearch()"
+      />
+    </span>
+    <p-select
+      [options]="clases"
+      optionLabel="label"
+      optionValue="value"
+      [(ngModel)]="filtroClase"
+      (onChange)="onSearch()"
+      placeholder="Clase"
+      styleClass="filtro-clase"
+    />
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10rem">Código</th>
+          <th>Nombre</th>
+          <th style="width: 9rem">Clase</th>
+          <th style="width: 9rem">Frecuencia</th>
+          <th style="width: 8rem">Estado</th>
+          <th style="width: 7rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.codigo }}</td>
+          <td>{{ row.nombre }}</td>
+          <td><p-tag [value]="row.clase" severity="info" /></td>
+          <td>{{ row.frecuencia }}</td>
+          <td>
+            <p-tag
+              [value]="row.active ? 'Activo' : 'Inactivo'"
+              [severity]="row.active ? 'success' : 'danger'"
+            />
+          </td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)"></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              (click)="eliminar(row)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="empty-row">Sin conceptos registrados</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-concepto-nomina
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [registro]="editing()"
+  (saved)="onSaved()"
+/>

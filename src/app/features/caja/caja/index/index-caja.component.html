@@ -1,0 +1,86 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-wallet"></i></span>
+      <div>
+        <h1 class="head-title">Cajas</h1>
+        <p class="head-sub">Puntos de recaudo</p>
+      </div>
+    </div>
+    <p-button label="Nueva caja" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 12rem">Código</th>
+          <th>Nombre</th>
+          <th style="width: 11rem" class="r">Saldo inicial</th>
+          <th style="width: 8rem">Estado</th>
+          <th style="width: 13rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.codigo }}</td>
+          <td>{{ row.nombre }}</td>
+          <td class="r nx-mono">{{ row.saldoInicial | number: '1.2-2' }}</td>
+          <td><p-tag [value]="row.estado" [severity]="row.estado === 'abierta' ? 'success' : 'secondary'" /></td>
+          <td class="text-center">
+            @if (row.estado === 'cerrada') {
+              <button pButton icon="pi pi-lock-open" [text]="true" severity="success" pTooltip="Abrir" (click)="abrirDialog(row)"></button>
+              <button pButton icon="pi pi-pencil" [text]="true" pTooltip="Editar" (click)="editar(row)"></button>
+              <button pButton icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (click)="eliminar(row)"></button>
+            }
+            @if (row.estado === 'abierta') {
+              <button pButton icon="pi pi-lock" [text]="true" severity="warn" pTooltip="Cerrar" (click)="cerrar(row)"></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin cajas</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  header="Abrir caja"
+  [visible]="showAbrir()"
+  (visibleChange)="showAbrir.set($event)"
+  [modal]="true"
+  [style]="{ width: '380px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="field">
+    <label>Saldo inicial (base en efectivo)</label>
+    <p-inputNumber [(ngModel)]="saldoInicial" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showAbrir.set(false)" />
+    <p-button label="Abrir" icon="pi pi-lock-open" [loading]="abriendo()" (onClick)="confirmarAbrir()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />
+<app-form-caja [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />

@@ -1,0 +1,83 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Historia laboral</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Empresa</th>
+        <th>Cargo</th>
+        <th style="width: 9rem">Contrato</th>
+        <th style="width: 9rem">Desde</th>
+        <th style="width: 9rem">Hasta</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.nombreEmpresa }}</td>
+        <td>{{ row.cargo }}</td>
+        <td>{{ row.tipoContrato }}</td>
+        <td>{{ row.fechaInicio }}</td>
+        <td>{{ row.fechaFinal }}</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="6" class="empty-row">Sin historia laboral</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar experiencia' : 'Nueva experiencia laboral'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field col-2">
+        <label for="h-emp">Empresa</label>
+        <input pInputText id="h-emp" formControlName="nombreEmpresa" />
+      </div>
+      <div class="field">
+        <label for="h-cargo">Cargo</label>
+        <input pInputText id="h-cargo" formControlName="cargo" />
+      </div>
+      <div class="field">
+        <label for="h-tc">Tipo de contrato</label>
+        <input pInputText id="h-tc" formControlName="tipoContrato" />
+      </div>
+      <div class="field">
+        <label for="h-fi">Desde</label>
+        <input pInputText id="h-fi" type="date" formControlName="fechaInicio" />
+      </div>
+      <div class="field">
+        <label for="h-ff">Hasta</label>
+        <input pInputText id="h-ff" type="date" formControlName="fechaFinal" />
+      </div>
+      <div class="field col-2">
+        <label for="h-jefe">Jefe inmediato</label>
+        <input pInputText id="h-jefe" formControlName="jefeInmediato" />
+      </div>
+      <div class="sat-check">
+        <p-checkbox formControlName="esPublico" [binary]="true" inputId="h-pub" />
+        <label for="h-pub">Entidad pública</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

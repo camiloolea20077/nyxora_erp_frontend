@@ -1,0 +1,185 @@
+@if (activo(); as a) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="volver()" />
+        <span class="head-icon"><i class="pi pi-desktop"></i></span>
+        <div>
+          <h1 class="head-title">{{ a.codigo }} · {{ a.nombre }}</h1>
+          <p class="head-sub">{{ a.numeroSerie ? 'Serie ' + a.numeroSerie : 'Activo fijo' }}</p>
+        </div>
+      </div>
+      <p-tag [value]="a.estadoActivo ?? '—'" severity="info" />
+    </header>
+
+    <!-- Resumen financiero -->
+    <div class="cards">
+      <div class="card">
+        <span class="card-label">Valor de compra</span>
+        <span class="card-value">{{ a.valorCompra | number: '1.0-0' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Depreciación acumulada</span>
+        <span class="card-value">{{ a.valorDepreciacion | number: '1.0-0' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Valor en libros</span>
+        <span class="card-value strong">{{ a.valorActual | number: '1.0-0' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Meses depreciados</span>
+        <span class="card-value">{{ a.mesesDepreciados ?? 0 }} / {{ a.vidaUtil ?? '—' }}</span>
+      </div>
+    </div>
+
+    <!-- Responsables -->
+    <section class="block">
+      <div class="block-head">
+        <h2><i class="pi pi-users"></i> Responsables</h2>
+        <p-button label="Asignar" icon="pi pi-plus" size="small" [text]="true" (onClick)="abrirResponsable()" />
+      </div>
+      <p-table [value]="responsables()" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tercero</th>
+            <th style="width: 8rem">Estado</th>
+            <th style="width: 6rem" class="text-center">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-r>
+          <tr>
+            <td>{{ r.terceroNombre ?? '#' + r.terceroId }}</td>
+            <td><p-tag [value]="r.active ? 'Activo' : 'Inactivo'" [severity]="r.active ? 'success' : 'danger'" /></td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="removerResponsable(r.terceroId, r.terceroNombre)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="3" class="empty-row">Sin responsables asignados</td></tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <!-- Pólizas -->
+    <section class="block">
+      <div class="block-head">
+        <h2><i class="pi pi-shield"></i> Pólizas</h2>
+        <p-button label="Asignar" icon="pi pi-plus" size="small" [text]="true" (onClick)="abrirPoliza()" />
+      </div>
+      <p-table [value]="polizas()" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 16rem">Número</th>
+            <th>Tipo</th>
+            <th style="width: 12rem" class="text-right">Valor asegurado</th>
+            <th style="width: 6rem" class="text-center">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-p>
+          <tr>
+            <td class="nx-mono">{{ p.numero }}</td>
+            <td>{{ p.tipo }}</td>
+            <td class="text-right">{{ p.valorAsegurado | number: '1.0-0' }}</td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="removerPoliza(p.polizaSeguroId, p.numero)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="4" class="empty-row">Sin pólizas asignadas</td></tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <!-- Depreciaciones -->
+    <section class="block">
+      <div class="block-head">
+        <h2><i class="pi pi-chart-line"></i> Depreciaciones</h2>
+        <p-button label="Registrar" icon="pi pi-plus" size="small" [text]="true" (onClick)="abrirDepreciacion()" />
+      </div>
+      <p-table [value]="depreciaciones()" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 12rem">Fecha</th>
+            <th class="text-right">Valor</th>
+            <th style="width: 10rem">Periodo</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-d>
+          <tr>
+            <td>{{ d.fechaAplicacion }}</td>
+            <td class="text-right">{{ d.valorDepreciacion | number: '1.0-2' }}</td>
+            <td>{{ d.periodoAmortizacion }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="3" class="empty-row">Sin depreciaciones registradas</td></tr>
+        </ng-template>
+      </p-table>
+    </section>
+  </div>
+}
+
+<p-confirmDialog />
+
+<app-tercero-selector
+  [visible]="showResponsableSelector()"
+  (visibleChange)="showResponsableSelector.set($event)"
+  header="Asignar responsable"
+  (selected)="onResponsableSelected($event)"
+/>
+
+<!-- Dialog asignar póliza -->
+<p-dialog header="Asignar póliza" [visible]="showPolizaDialog()" (visibleChange)="showPolizaDialog.set($event)" [modal]="true" [style]="{ width: '440px' }" [draggable]="false">
+  <div class="dialog-form">
+    <div class="field">
+      <label for="ap-poliza">Póliza</label>
+      <p-select
+        inputId="ap-poliza"
+        [(ngModel)]="polizaSeleccionada"
+        [options]="polizaOptions()"
+        optionLabel="numero"
+        optionValue="id"
+        [filter]="true"
+        filterBy="numero,tipo"
+        placeholder="Selecciona una póliza"
+        styleClass="w-full"
+      />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showPolizaDialog.set(false)" />
+    <p-button label="Asignar" icon="pi pi-check" [loading]="guardandoPoliza()" (onClick)="asignarPoliza()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Dialog registrar depreciación -->
+<p-dialog header="Registrar depreciación" [visible]="showDepDialog()" (visibleChange)="showDepDialog.set($event)" [modal]="true" [style]="{ width: '460px' }" [draggable]="false">
+  <div class="dialog-form">
+    <div class="grid-2">
+      <div class="field">
+        <label for="dp-fecha">Fecha de aplicación</label>
+        <input pInputText id="dp-fecha" type="date" [(ngModel)]="depFecha" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="dp-periodo">Periodo</label>
+        <p-inputNumber inputId="dp-periodo" [(ngModel)]="depPeriodo" [min]="0" styleClass="w-full" />
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="dp-valor">Valor depreciación</label>
+        <p-inputNumber inputId="dp-valor" [(ngModel)]="depValor" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" styleClass="w-full" />
+      </div>
+      <div class="field">
+        <label for="dp-cuota">Cuota</label>
+        <p-inputNumber inputId="dp-cuota" [(ngModel)]="depCuota" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" styleClass="w-full" />
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showDepDialog.set(false)" />
+    <p-button label="Registrar" icon="pi pi-check" [loading]="guardandoDep()" (onClick)="registrarDepreciacion()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,46 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar falta' : 'Nueva falta'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field col-2">
+        <label for="f-clasif">Clasificación</label>
+        <p-select inputId="f-clasif" appendTo="body" [options]="clasificaciones()" optionLabel="nombre" optionValue="id" formControlName="clasificacionFaltaId" [filter]="true" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="f-codigo">Código</label>
+        <input pInputText id="f-codigo" formControlName="codigo" class="w-full" [class.ng-invalid]="isInvalid('codigo')" />
+        @if (isInvalid('codigo')) { <small class="error">El código es obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="f-cad">Caducidad (días)</label>
+        <p-inputNumber inputId="f-cad" formControlName="caducidadDias" [min]="0" />
+      </div>
+      <div class="field col-2">
+        <label for="f-nombre">Nombre</label>
+        <input pInputText id="f-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+      </div>
+      <div class="field col-2">
+        <label for="f-desc">Descripción</label>
+        <textarea pTextarea id="f-desc" formControlName="descripcion" rows="2" class="w-full"></textarea>
+      </div>
+      <div class="field col-2">
+        <label for="f-pol">Política</label>
+        <textarea pTextarea id="f-pol" formControlName="politica" rows="2" class="w-full"></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

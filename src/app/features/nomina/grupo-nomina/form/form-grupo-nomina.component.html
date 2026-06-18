@@ -1,0 +1,61 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar grupo' : 'Nuevo grupo de nómina'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="g-codigo">Código</label>
+      <input
+        pInputText
+        id="g-codigo"
+        formControlName="codigo"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('codigo')"
+      />
+      @if (isInvalid('codigo')) {
+        <small class="error">El código es obligatorio</small>
+      }
+    </div>
+    <div class="field">
+      <label for="g-nombre">Nombre</label>
+      <input
+        pInputText
+        id="g-nombre"
+        formControlName="nombre"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('nombre')"
+      />
+      @if (isInvalid('nombre')) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </div>
+    <div class="field">
+      <label for="g-frec">Frecuencia de pago</label>
+      <p-select
+        inputId="g-frec"
+        [options]="frecuencias"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="frecuenciaPago"
+        [showClear]="true"
+        appendTo="body"
+        placeholder="Seleccione…"
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

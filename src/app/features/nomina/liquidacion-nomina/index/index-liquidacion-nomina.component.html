@@ -1,0 +1,76 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-dollar"></i></span>
+      <div>
+        <h1 class="head-title">Liquidaciones de nómina</h1>
+        <p class="head-sub">Liquidar el periodo, ver detalle/PILA y contabilizar</p>
+      </div>
+    </div>
+    <p-button label="Nueva liquidación" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 7rem">Año</th>
+          <th style="width: 6rem">Mes</th>
+          <th>Periodo</th>
+          <th style="width: 11rem">Fecha</th>
+          <th style="width: 11rem">Estado</th>
+          <th style="width: 11rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.anio }}</td>
+          <td>{{ row.mes }}</td>
+          <td>{{ row.periodo }}</td>
+          <td>{{ row.fecha }}</td>
+          <td><p-tag [value]="row.estado" [severity]="severidad(row.estado)" /></td>
+          <td class="text-center">
+            <p-button
+              label="Gestionar"
+              icon="pi pi-folder-open"
+              size="small"
+              [outlined]="true"
+              (onClick)="abrir(row)"
+            />
+            @if (row.estado === 'abierto') {
+              <button
+                pButton
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                (click)="eliminar(row)"
+              ></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="empty-row">Sin liquidaciones registradas</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-liquidacion-nomina
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  (saved)="onSaved()"
+/>

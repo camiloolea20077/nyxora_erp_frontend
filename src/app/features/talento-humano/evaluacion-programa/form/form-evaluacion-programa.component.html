@@ -1,0 +1,36 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar programa' : 'Nuevo programa de evaluación'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="ep-codigo">Código</label>
+        <input pInputText id="ep-codigo" formControlName="codigo" class="w-full" />
+      </div>
+      <div class="field col-2">
+        <label for="ep-nombre">Nombre</label>
+        <input pInputText id="ep-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+        @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="ep-fi">Fecha inicial</label>
+        <input pInputText id="ep-fi" type="date" formControlName="fechaInicial" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="ep-ff">Fecha final</label>
+        <input pInputText id="ep-ff" type="date" formControlName="fechaFinal" class="w-full" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

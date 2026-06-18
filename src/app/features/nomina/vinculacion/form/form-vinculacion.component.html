@@ -1,0 +1,98 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar vinculación' : 'Nueva vinculación'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '760px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid3">
+      <div class="field col-2">
+        <label for="v-emp">Empleado</label>
+        <p-select
+          inputId="v-emp"
+          appendTo="body"
+          [options]="empleados()"
+          optionLabel="nombre"
+          optionValue="id"
+          formControlName="empleadoId"
+          [filter]="true"
+          filterBy="nombre,numeroDocumento"
+          placeholder="Seleccione…"
+          [class.ng-invalid]="isInvalid('empleadoId')"
+        />
+        @if (isInvalid('empleadoId')) { <small class="error">El empleado es obligatorio</small> }
+      </div>
+      <div class="field">
+        <label for="v-codigo">Código</label>
+        <input pInputText id="v-codigo" formControlName="codigo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="v-cargo">Cargo</label>
+        <p-select inputId="v-cargo" appendTo="body" [options]="cargos()" optionLabel="nombre" optionValue="id" formControlName="cargoId" [filter]="true" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="v-grupo">Grupo de nómina</label>
+        <p-select inputId="v-grupo" appendTo="body" [options]="grupos()" optionLabel="nombre" optionValue="id" formControlName="grupoNominaId" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="v-sueldo">Sueldo</label>
+        <p-inputNumber inputId="v-sueldo" formControlName="sueldo" mode="currency" currency="COP" locale="es-CO" />
+      </div>
+      <div class="field">
+        <label for="v-fecha">Fecha de ingreso</label>
+        <input pInputText id="v-fecha" type="date" formControlName="fecha" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="v-ffin">Fecha fin</label>
+        <input pInputText id="v-ffin" type="date" formControlName="fechaFin" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="v-tcontrato">Tipo de contrato</label>
+        <p-select inputId="v-tcontrato" appendTo="body" [options]="tiposContrato" optionLabel="label" optionValue="value" formControlName="tipoContrato" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="v-tvinc">Tipo de vinculación</label>
+        <input pInputText id="v-tvinc" formControlName="tipoVinculacion" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="v-horas">Horas de trabajo</label>
+        <p-inputNumber inputId="v-horas" formControlName="horaTrabajo" [min]="0" [max]="24" />
+      </div>
+      <div class="field">
+        <label for="v-frec">Frecuencia de pago</label>
+        <p-select inputId="v-frec" appendTo="body" [options]="frecuencias" optionLabel="label" optionValue="value" formControlName="frecuenciaPago" [showClear]="true" placeholder="Seleccione…" />
+      </div>
+      <div class="field">
+        <label for="v-cot">Tipo de cotizante</label>
+        <input pInputText id="v-cot" formControlName="tipoCotizante" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="v-estado">Estado</label>
+        <p-select inputId="v-estado" appendTo="body" [options]="estados" optionLabel="label" optionValue="value" formControlName="estadoVinculacion" placeholder="Seleccione…" />
+      </div>
+      <div class="checks col-3">
+        <div class="chk">
+          <p-checkbox formControlName="periodoPrueba" [binary]="true" inputId="v-prueba" />
+          <label for="v-prueba">Periodo de prueba</label>
+        </div>
+        <div class="chk">
+          <p-checkbox formControlName="temporal" [binary]="true" inputId="v-temp" />
+          <label for="v-temp">Temporal</label>
+        </div>
+      </div>
+      <div class="field col-3">
+        <label for="v-objeto">Objeto</label>
+        <textarea pTextarea id="v-objeto" formControlName="objeto" rows="2" class="w-full"></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,42 @@
+<div class="sat">
+  <div class="add-row">
+    <p-select
+      appendTo="body"
+      [options]="programas()"
+      optionLabel="nombre"
+      optionValue="id"
+      [(ngModel)]="programaAcademicoId"
+      [filter]="true"
+      [showClear]="true"
+      placeholder="Programa…"
+      styleClass="prog-sel"
+    />
+    <p-inputNumber [(ngModel)]="semestre" [min]="1" [max]="20" placeholder="Sem." inputStyleClass="num-sm" />
+    <p-inputNumber [(ngModel)]="creditos" [min]="0" placeholder="Créd." inputStyleClass="num-sm" />
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [loading]="saving()" (onClick)="agregar()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Programa</th>
+        <th style="width: 6rem">Semestre</th>
+        <th style="width: 6rem">Créditos</th>
+        <th style="width: 5rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.programaNombre }}</td>
+        <td>{{ row.semestre }}</td>
+        <td>{{ row.creditos }}</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="4" class="empty-row">Sin programas asociados</td></tr>
+    </ng-template>
+  </p-table>
+</div>

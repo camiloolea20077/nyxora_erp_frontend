@@ -1,0 +1,80 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-calendar-plus"></i></span>
+      <div>
+        <h1 class="head-title">Nuevo acuerdo de pago</h1>
+        <p class="head-sub">Cuenta por cobrar y cuotas</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field col-2">
+        <label for="a-cxc">Cuenta por cobrar (vigente) *</label>
+        <p-select
+          inputId="a-cxc"
+          formControlName="cuentaPorCobrarId"
+          [options]="cuentas()"
+          optionLabel="label"
+          optionValue="id"
+          [filter]="true"
+          filterBy="label"
+          placeholder="Selecciona…"
+        />
+      </div>
+      <div class="field">
+        <label for="a-fecha">Fecha *</label>
+        <input pInputText id="a-fecha" type="date" formControlName="fecha" />
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="lines-head">
+      <h3>Cuotas</h3>
+      <p-button label="Agregar cuota" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregar()" />
+    </div>
+
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width: 6rem">#</th>
+          <th>Valor</th>
+          <th style="width: 16rem">Fecha de aplicación</th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cuota of cuotas(); track cuota._id; let i = $index) {
+          <tr>
+            <td class="nx-mono">{{ i + 1 }}</td>
+            <td>
+              <p-inputNumber [(ngModel)]="cuota.valor" [ngModelOptions]="{ standalone: true }" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+            </td>
+            <td>
+              <input pInputText type="date" [(ngModel)]="cuota.fechaAplicacion" [ngModelOptions]="{ standalone: true }" />
+            </td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitar(cuota._id)"></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="r b" colspan="1">Σ</td>
+          <td class="b nx-mono">{{ sumaCuotas() | number: '1.2-2' }}</td>
+          <td class="hint" colspan="2">Saldo CxC: {{ saldoSeleccionado() | number: '1.2-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="hint"><i class="pi pi-info-circle"></i> La suma de cuotas no puede superar el saldo de la cuenta por cobrar.</p>
+  </div>
+</div>

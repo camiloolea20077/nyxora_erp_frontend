@@ -1,0 +1,99 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar rubro presupuestal' : 'Nuevo rubro presupuestal'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid">
+      <div class="field">
+        <label for="r-vig">Vigencia *</label>
+        <p-select
+          inputId="r-vig"
+          formControlName="vigenciaId"
+          [options]="vigencias()"
+          optionLabel="year"
+          optionValue="id"
+          placeholder="Selecciona…"
+          appendTo="body"
+        />
+        @if (isInvalid('vigenciaId')) {
+          <small class="error">La vigencia es obligatoria</small>
+        }
+      </div>
+      <div class="field">
+        <label for="r-tipo">Tipo</label>
+        <p-select
+          inputId="r-tipo"
+          formControlName="tipoRubro"
+          [options]="tipos"
+          optionLabel="label"
+          optionValue="value"
+          appendTo="body"
+        />
+      </div>
+      <div class="field">
+        <label for="r-cod">Código *</label>
+        <input
+          pInputText
+          id="r-cod"
+          formControlName="codigoRubro"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('codigoRubro')"
+        />
+        @if (isInvalid('codigoRubro')) {
+          <small class="error">El código es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="r-homol">Homologación CUIN</label>
+        <input pInputText id="r-homol" formControlName="homologacionCircularUnica" class="w-full" />
+      </div>
+      <div class="field col-2">
+        <label for="r-nom">Nombre *</label>
+        <input
+          pInputText
+          id="r-nom"
+          formControlName="nombreRubro"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('nombreRubro')"
+        />
+        @if (isInvalid('nombreRubro')) {
+          <small class="error">El nombre es obligatorio</small>
+        }
+      </div>
+      <div class="field col-2">
+        <label for="r-padre">Rubro padre</label>
+        <p-select
+          inputId="r-padre"
+          formControlName="rubroPadreId"
+          [options]="rubros()"
+          optionLabel="codigoRubro"
+          optionValue="id"
+          [filter]="true"
+          filterBy="codigoRubro,nombreRubro"
+          [showClear]="true"
+          placeholder="(Raíz)"
+          appendTo="body"
+        />
+      </div>
+      <div class="field-check col-2">
+        <p-checkbox inputId="r-mov" formControlName="manejaMovimiento" [binary]="true" />
+        <label for="r-mov">Maneja movimiento (rubro imputable, acepta afectaciones)</label>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

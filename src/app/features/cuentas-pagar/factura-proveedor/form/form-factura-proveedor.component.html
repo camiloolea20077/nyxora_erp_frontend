@@ -1,0 +1,73 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-file-import"></i></span>
+      <div>
+        <h1 class="head-title">Nueva factura de proveedor</h1>
+        <p class="head-sub">Recepción de factura electrónica</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field col-2">
+        <label>Proveedor *</label>
+        <div class="prov-pick">
+          <span class="picked" [class.empty]="!proveedorNombre()">{{
+            proveedorNombre() || 'Ninguno seleccionado'
+          }}</span>
+          <p-button
+            label="Buscar"
+            icon="pi pi-search"
+            [text]="true"
+            size="small"
+            (onClick)="openSelector()"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-num">Número de documento</label>
+        <input pInputText id="f-num" formControlName="numeroDocumento" />
+      </div>
+      <div class="field">
+        <label for="f-fecha">Fecha de recepción</label>
+        <input pInputText id="f-fecha" type="date" formControlName="fechaRecepcion" />
+      </div>
+      <div class="field">
+        <label for="f-valor">Valor factura</label>
+        <p-inputNumber
+          inputId="f-valor"
+          formControlName="valorFactura"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="2"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="f-cufe">CUFE</label>
+        <input pInputText id="f-cufe" formControlName="cufe" />
+      </div>
+      <div class="field">
+        <label for="f-email">Email remitente</label>
+        <input pInputText id="f-email" formControlName="emailRemitente" />
+      </div>
+      <div class="field col-3">
+        <label for="f-pdf">URL PDF</label>
+        <input pInputText id="f-pdf" formControlName="pdfUrl" />
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar proveedor"
+  (selected)="onProveedorSelected($event)"
+/>

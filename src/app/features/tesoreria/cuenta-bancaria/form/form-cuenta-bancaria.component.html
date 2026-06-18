@@ -1,0 +1,114 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar cuenta bancaria' : 'Nueva cuenta bancaria'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label>Banco (tercero)</label>
+      <div class="banco-pick" [class.ng-invalid-box]="isInvalid('bancoId')">
+        <span class="picked" [class.empty]="!bancoNombre()">{{
+          bancoNombre() || 'Ninguno seleccionado'
+        }}</span>
+        <p-button
+          label="Buscar"
+          icon="pi pi-search"
+          [text]="true"
+          size="small"
+          (onClick)="openSelector()"
+        />
+      </div>
+      @if (isInvalid('bancoId')) {
+        <small class="error">El banco es obligatorio</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="cb-tipo">Tipo de cuenta</label>
+      <p-select
+        inputId="cb-tipo"
+        appendTo="body"
+        formControlName="tipoCuentaBancariaId"
+        [options]="tiposCuenta()"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Selecciona…"
+        [class.ng-invalid]="isInvalid('tipoCuentaBancariaId')"
+      />
+      @if (isInvalid('tipoCuentaBancariaId')) {
+        <small class="error">El tipo es obligatorio</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="cb-num">Número de cuenta</label>
+      <input
+        pInputText
+        id="cb-num"
+        formControlName="numeroCuenta"
+        class="w-full"
+        [class.ng-invalid]="isInvalid('numeroCuenta')"
+      />
+      @if (isInvalid('numeroCuenta')) {
+        <small class="error">El número es obligatorio</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="cb-cuenta">Cuenta contable (opcional)</label>
+      <p-select
+        inputId="cb-cuenta"
+        appendTo="body"
+        formControlName="cuentaContableId"
+        [options]="cuentas()"
+        optionLabel="nombreCuenta"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombreCuenta,codigoCuenta"
+        [showClear]="true"
+        placeholder="(Opcional)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="cb-exp">Fecha de expiración (opcional)</label>
+      <input pInputText id="cb-exp" type="date" formControlName="fechaExpiracion" class="w-full" />
+    </div>
+
+    <div class="chk">
+      <p-checkbox formControlName="manejaSobregiro" [binary]="true" inputId="cb-sob" /><label
+        for="cb-sob"
+        >Maneja sobregiro</label
+      >
+    </div>
+    <div class="chk">
+      <p-checkbox formControlName="aceptaTransferencias" [binary]="true" inputId="cb-tra" /><label
+        for="cb-tra"
+        >Acepta transferencias</label
+      >
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  [tipoTerceroId]="bancoTipoId()"
+  header="Buscar banco"
+  (selected)="onBancoSelected($event)"
+/>

@@ -1,0 +1,41 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-id-card"></i></span>
+      <div>
+        <h1 class="head-title">{{ nombre() }}</h1>
+        <p class="head-sub">Hoja de vida · Documento {{ documento() }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    @if (empleadoId()) {
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab value="0"><i class="pi pi-graduation-cap"></i> Estudios</p-tab>
+          <p-tab value="1"><i class="pi pi-users"></i> Familiares</p-tab>
+          <p-tab value="2"><i class="pi pi-briefcase"></i> Historia laboral</p-tab>
+          <p-tab value="3"><i class="pi pi-star"></i> Evaluaciones</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <app-estudios-empleado [empleadoId]="empleadoId()" />
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            <app-familiares-empleado [empleadoId]="empleadoId()" />
+          </p-tabpanel>
+          <p-tabpanel value="2">
+            <app-historia-empleado [empleadoId]="empleadoId()" />
+          </p-tabpanel>
+          <p-tabpanel value="3">
+            <app-evaluaciones-empleado [empleadoId]="empleadoId()" />
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    }
+  </div>
+</div>
+
+<p-confirmDialog />

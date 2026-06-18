@@ -1,0 +1,71 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar resolución DIAN' : 'Nueva resolución DIAN'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid">
+      <div class="field col-2">
+        <label for="r-num">Número de resolución *</label>
+        <input
+          pInputText
+          id="r-num"
+          formControlName="numeroResolucion"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('numeroResolucion')"
+        />
+        @if (isInvalid('numeroResolucion')) {
+          <small class="error">El número es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="r-prefijo">Prefijo</label>
+        <input
+          pInputText
+          id="r-prefijo"
+          formControlName="prefijo"
+          class="w-full"
+          placeholder="FE"
+        />
+      </div>
+      <div class="field">
+        <label for="r-ini">Factura inicial</label>
+        <p-inputNumber inputId="r-ini" formControlName="facturaInicial" [useGrouping]="false" />
+      </div>
+      <div class="field">
+        <label for="r-fin">Factura final</label>
+        <p-inputNumber inputId="r-fin" formControlName="facturaFinal" [useGrouping]="false" />
+      </div>
+      <div class="field">
+        <label for="r-fini">Fecha inicial</label>
+        <input pInputText id="r-fini" type="date" formControlName="fechaInicial" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="r-ffin">Fecha final</label>
+        <input pInputText id="r-ffin" type="date" formControlName="fechaFinal" class="w-full" />
+      </div>
+      <div class="field col-2">
+        <label for="r-clave">Clave técnica</label>
+        <input pInputText id="r-clave" formControlName="claveTecnica" class="w-full" />
+      </div>
+      <div class="field col-2">
+        <label for="r-desc">Descripción</label>
+        <input pInputText id="r-desc" formControlName="descripcion" class="w-full" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

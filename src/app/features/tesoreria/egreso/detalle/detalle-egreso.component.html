@@ -1,0 +1,65 @@
+@if (egreso(); as e) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-arrow-up"></i></span>
+        <div>
+          <h1 class="head-title">Egreso {{ e.numero ?? '#' + e.id }}</h1>
+          <p class="head-sub">{{ e.fecha }} · beneficiario #{{ e.beneficiarioId }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="e.estado" />
+        @if (e.estado === 'borrador') {
+          <p-button label="Girar" icon="pi pi-send" severity="success" (onClick)="abrirGirar()" />
+        }
+        @if (e.estado === 'borrador' || e.estado === 'girado') {
+          <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="grid">
+        <div><span>Valor</span><b class="nx-mono">{{ e.valor | number: '1.2-2' }}</b></div>
+        <div><span>Cuenta bancaria</span><b>#{{ e.cuentaBancariaId }}</b></div>
+        <div><span>Número cheque</span><b>{{ e.numeroCheque || '—' }}</b></div>
+        <div><span>Aplica a</span><b>{{ e.origenId ? 'Obligación #' + e.origenId : '—' }}</b></div>
+        <div class="col-2"><span>Descripción</span><b>{{ e.descripcion || '—' }}</b></div>
+      </div>
+    </div>
+  </div>
+}
+
+<p-dialog
+  header="Girar egreso"
+  [visible]="showGirar()"
+  (visibleChange)="showGirar.set($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="subtitle">Se aplica a la obligación (si tiene). Las cuentas y el periodo son opcionales: complétalos para generar el asiento (débito CxP / crédito banco).</p>
+  <div class="conf-form">
+    <div class="field">
+      <label>Cuenta CxP</label>
+      <p-select [(ngModel)]="cuentaCxpId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="(Opcional)" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Cuenta banco</label>
+      <p-select [(ngModel)]="cuentaBancoId" [options]="cuentas()" optionLabel="nombreCuenta" optionValue="id" [filter]="true" filterBy="nombreCuenta,codigoCuenta" [showClear]="true" placeholder="(Opcional)" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Periodo contable</label>
+      <p-select [(ngModel)]="periodoContableId" [options]="periodoOpts()" optionLabel="label" optionValue="id" [showClear]="true" placeholder="(Opcional)" appendTo="body" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showGirar.set(false)" />
+    <p-button label="Girar" icon="pi pi-send" [loading]="girando()" (onClick)="girar()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />

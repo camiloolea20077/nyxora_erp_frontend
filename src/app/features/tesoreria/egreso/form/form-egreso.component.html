@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-arrow-up"></i></span>
+      <div>
+        <h1 class="head-title">Nuevo egreso</h1>
+        <p class="head-sub">Comprobante de egreso (borrador)</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field col-2">
+        <label>Beneficiario *</label>
+        <div class="prov-pick">
+          <span class="picked" [class.empty]="!beneficiarioNombre()">{{ beneficiarioNombre() || 'Ninguno seleccionado' }}</span>
+          <p-button label="Buscar" icon="pi pi-search" [text]="true" size="small" (onClick)="openSelector()" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="e-cb">Cuenta bancaria</label>
+        <p-select inputId="e-cb" formControlName="cuentaBancariaId" [options]="cuentas()" optionLabel="numeroCuenta" optionValue="id" [filter]="true" filterBy="numeroCuenta" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+      <div class="field">
+        <label for="e-fp">Forma de pago</label>
+        <p-select inputId="e-fp" formControlName="formaPagoId" [options]="formasPago()" optionLabel="nombre" optionValue="id" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+      <div class="field">
+        <label for="e-num">Número</label>
+        <input pInputText id="e-num" formControlName="numero" />
+      </div>
+      <div class="field">
+        <label for="e-fecha">Fecha *</label>
+        <input pInputText id="e-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field">
+        <label for="e-valor">Valor *</label>
+        <p-inputNumber inputId="e-valor" formControlName="valor" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+      </div>
+      <div class="field">
+        <label for="e-cheque">Número de cheque</label>
+        <input pInputText id="e-cheque" formControlName="numeroCheque" />
+      </div>
+      <div class="field col-2">
+        <label for="e-obl">Aplicar a obligación de pago</label>
+        <p-select inputId="e-obl" formControlName="obligacionPagoId" [options]="obligaciones()" optionLabel="label" optionValue="id" [filter]="true" filterBy="label" [showClear]="true" placeholder="(Opcional)" />
+      </div>
+      <div class="field col-3">
+        <label for="e-obs">Descripción</label>
+        <input pInputText id="e-obs" formControlName="descripcion" />
+      </div>
+    </form>
+    <p class="hint"><i class="pi pi-info-circle"></i> El egreso se crea en borrador. Al <b>girar</b> (desde el detalle) se aplica a la obligación y genera el asiento.</p>
+  </div>
+</div>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar beneficiario"
+  (selected)="onBeneficiarioSelected($event)"
+/>

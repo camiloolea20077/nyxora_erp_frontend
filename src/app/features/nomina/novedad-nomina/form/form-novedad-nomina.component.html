@@ -1,0 +1,105 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar novedad' : 'Nueva novedad de nómina'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '720px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="n-vin">Vinculación (empleado)</label>
+        <p-select
+          inputId="n-vin"
+          appendTo="body"
+          [options]="vinculaciones()"
+          optionLabel="empleadoNombre"
+          optionValue="id"
+          formControlName="vinculacionId"
+          [filter]="true"
+          filterBy="empleadoNombre,codigo"
+          placeholder="Seleccione…"
+          [class.ng-invalid]="isInvalid('vinculacionId')"
+        />
+        @if (isInvalid('vinculacionId')) { <small class="error">La vinculación es obligatoria</small> }
+      </div>
+      <div class="field">
+        <label for="n-con">Concepto</label>
+        <p-select
+          inputId="n-con"
+          appendTo="body"
+          [options]="conceptos()"
+          optionLabel="nombre"
+          optionValue="id"
+          formControlName="conceptoNominaId"
+          [filter]="true"
+          placeholder="Seleccione…"
+          [class.ng-invalid]="isInvalid('conceptoNominaId')"
+        />
+        @if (isInvalid('conceptoNominaId')) { <small class="error">El concepto es obligatorio</small> }
+      </div>
+      <div class="field col-2">
+        <label for="n-desc">Descripción</label>
+        <input pInputText id="n-desc" formControlName="descripcion" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="n-val">Cantidad / valor</label>
+        <p-inputNumber inputId="n-val" formControlName="cantidadValor" [minFractionDigits]="0" [maxFractionDigits]="2" />
+      </div>
+      <div class="field">
+        <label for="n-cuota">N.º cuota</label>
+        <p-inputNumber inputId="n-cuota" formControlName="numeroCuota" [minFractionDigits]="0" [maxFractionDigits]="2" />
+      </div>
+      <div class="field">
+        <label for="n-fi">Fecha inicial</label>
+        <input pInputText id="n-fi" type="date" formControlName="fechaInicial" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="n-ff">Fecha final</label>
+        <input pInputText id="n-ff" type="date" formControlName="fechaFinal" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="n-dias">Días</label>
+        <p-inputNumber inputId="n-dias" formControlName="dias" [min]="0" />
+      </div>
+      <div class="field">
+        <label for="n-aus">Tipo de ausentismo</label>
+        <input pInputText id="n-aus" formControlName="tipoAusentismo" class="w-full" />
+      </div>
+    </div>
+
+    <div class="sec">
+      <h4 class="sec-title">Embargo (opcional)</h4>
+      <div class="grid2">
+        <div class="field">
+          <label for="n-temb">Tipo de embargo</label>
+          <input pInputText id="n-temb" formControlName="tipoEmbargo" class="w-full" placeholder="alimentos, ordinario…" />
+        </div>
+        <div class="field">
+          <label for="n-exp">Expediente</label>
+          <input pInputText id="n-exp" formControlName="expediente" class="w-full" />
+        </div>
+        <div class="field col-2">
+          <label for="n-dem">Demandante</label>
+          <input pInputText id="n-dem" formControlName="demandante" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="n-banco">Banco</label>
+          <p-select inputId="n-banco" appendTo="body" [options]="bancos()" optionLabel="nombre" optionValue="id" formControlName="bancoId" [filter]="true" [showClear]="true" placeholder="Seleccione…" />
+        </div>
+        <div class="field">
+          <label for="n-cta">N.º cuenta bancaria</label>
+          <input pInputText id="n-cta" formControlName="numeroCuentaBancaria" class="w-full" />
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

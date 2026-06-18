@@ -1,0 +1,128 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-dollar"></i></span>
+      <div>
+        <h1 class="head-title">
+          Liquidación {{ liq()?.anio }}-{{ liq()?.mes }}
+          @if (liq(); as l) { <p-tag [value]="l.estado" [severity]="severidad(l.estado)" /> }
+        </h1>
+        <p class="head-sub">Periodo {{ liq()?.periodo }} · Fecha {{ liq()?.fecha }}</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      @if (puedeLiquidar()) {
+        <p-button label="Liquidar" icon="pi pi-cog" (onClick)="abrirLiquidar()" [disabled]="working()" />
+      }
+      @if (puedeContabilizar()) {
+        <p-button label="Contabilizar" icon="pi pi-book" (onClick)="abrirContabilizar()" [disabled]="working()" />
+      }
+      @if (puedeAnular()) {
+        <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" [disabled]="working()" />
+      }
+    </div>
+  </header>
+
+  <div class="card">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0"><i class="pi pi-list"></i> Detalle ({{ detalle().length }})</p-tab>
+        <p-tab value="1"><i class="pi pi-shield"></i> PILA ({{ pila().length }})</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <p-table [value]="detalle()" [loading]="loading()" dataKey="id">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Empleado</th>
+                <th>Concepto</th>
+                <th style="width: 9rem">Clase</th>
+                <th style="width: 12rem" class="text-right">Valor</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.empleadoNombre }}</td>
+                <td>{{ row.conceptoNombre }}</td>
+                <td><p-tag [value]="row.clase" severity="info" /></td>
+                <td class="text-right">{{ row.valor | number: '1.0-2' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="4" class="empty-row">Sin detalle. Liquida la nómina para generarlo.</td></tr>
+            </ng-template>
+          </p-table>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <p-table [value]="pila()" [loading]="loading()" dataKey="id">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Empleado</th>
+                <th style="width: 9rem">Aporte</th>
+                <th style="width: 11rem" class="text-right">IBC</th>
+                <th style="width: 11rem" class="text-right">Empleado</th>
+                <th style="width: 11rem" class="text-right">Patrono</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.empleadoNombre }}</td>
+                <td><p-tag [value]="row.tipoAporte" severity="warn" /></td>
+                <td class="text-right">{{ row.ibc | number: '1.0-2' }}</td>
+                <td class="text-right">{{ row.valorEmpleado | number: '1.0-2' }}</td>
+                <td class="text-right">{{ row.valorPatrono | number: '1.0-2' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="5" class="empty-row">Sin aportes PILA.</td></tr>
+            </ng-template>
+          </p-table>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>
+
+<!-- Diálogo Liquidar -->
+<p-dialog header="Liquidar nómina" [visible]="showLiquidar()" (visibleChange)="showLiquidar.set($event)" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false">
+  <div class="dlg">
+    <p class="hint">Se generará el detalle (sueldo + novedades pendientes) y los aportes PILA.</p>
+    <div class="field">
+      <label for="d-concepto">Concepto de sueldo (opcional)</label>
+      <p-select inputId="d-concepto" appendTo="body" [options]="conceptosDevengado()" optionLabel="label" optionValue="id" [(ngModel)]="conceptoSueldoId" [filter]="true" [showClear]="true" placeholder="Sin línea de sueldo base" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showLiquidar.set(false)" />
+    <p-button label="Liquidar" icon="pi pi-check" [loading]="working()" (onClick)="confirmarLiquidar()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Diálogo Contabilizar -->
+<p-dialog header="Contabilizar nómina" [visible]="showContabilizar()" (visibleChange)="showContabilizar.set($event)" [modal]="true" [style]="{ width: '560px' }" [draggable]="false" [resizable]="false">
+  <div class="dlg">
+    <div class="field">
+      <label for="d-periodo">Periodo contable</label>
+      <p-select inputId="d-periodo" appendTo="body" [options]="periodos()" optionLabel="label" optionValue="id" [(ngModel)]="periodoContableId" placeholder="Seleccione…" />
+    </div>
+    <div class="field">
+      <label for="d-gasto">Cuenta de gasto (débito)</label>
+      <p-select inputId="d-gasto" appendTo="body" [options]="cuentas()" optionLabel="label" optionValue="id" [(ngModel)]="cuentaGastoId" [filter]="true" placeholder="Seleccione…" />
+    </div>
+    <div class="field">
+      <label for="d-pagar">Cuenta por pagar (neto, crédito)</label>
+      <p-select inputId="d-pagar" appendTo="body" [options]="cuentas()" optionLabel="label" optionValue="id" [(ngModel)]="cuentaPorPagarId" [filter]="true" placeholder="Seleccione…" />
+    </div>
+    <div class="field">
+      <label for="d-ded">Cuenta de deducciones (opcional)</label>
+      <p-select inputId="d-ded" appendTo="body" [options]="cuentas()" optionLabel="label" optionValue="id" [(ngModel)]="cuentaDeduccionesId" [filter]="true" [showClear]="true" placeholder="Netear contra por pagar" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showContabilizar.set(false)" />
+    <p-button label="Contabilizar" icon="pi pi-check" [loading]="working()" (onClick)="confirmarContabilizar()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />

@@ -1,0 +1,63 @@
+.head-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.lines-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+table.lines {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.lines th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--nx-muted);
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--nx-border);
+}
+table.lines th.r {
+  text-align: right;
+}
+table.lines td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--nx-border);
+  font-size: 0.88rem;
+}
+.r {
+  text-align: right;
+}
+.empty {
+  color: var(--nx-muted);
+  text-align: center;
+}
+.totales {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-end;
+}
+.totales > div {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.88rem;
+}
+.totales > div span {
+  color: var(--nx-muted);
+}
+.totales .grand {
+  font-size: 1.05rem;
+  border-top: 2px solid var(--nx-border);
+  padding-top: 0.4rem;
+}

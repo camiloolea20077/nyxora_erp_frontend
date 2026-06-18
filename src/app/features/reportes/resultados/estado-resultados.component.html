@@ -1,0 +1,56 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-chart-line"></i></span>
+      <div>
+        <h1 class="head-title">Estado de resultados</h1>
+        <p class="head-sub">Ingresos − costos/gastos = utilidad (por periodo)</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <p-select
+      appendTo="body"
+      [options]="periodos()"
+      optionLabel="label"
+      optionValue="id"
+      [(ngModel)]="periodoId"
+      [filter]="true"
+      placeholder="Periodo contable…"
+      styleClass="sel"
+    />
+    <p-button label="Generar" icon="pi pi-cog" [loading]="loading()" (onClick)="generar()" />
+  </div>
+
+  @if (data(); as r) {
+    <div class="resumen">
+      <div class="kpi"><span class="k-label">Ingresos</span><span class="k-val">{{ r.totalIngresos | number: '1.0-2' }}</span></div>
+      <div class="kpi"><span class="k-label">Costos y gastos</span><span class="k-val">{{ r.totalCostosGastos | number: '1.0-2' }}</span></div>
+      <div class="kpi" [class.ok]="r.utilidad >= 0" [class.bad]="r.utilidad < 0">
+        <span class="k-label">Utilidad</span><span class="k-val">{{ r.utilidad | number: '1.0-2' }}</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3 class="panel-title">Ingresos <span class="tot">{{ r.totalIngresos | number: '1.0-2' }}</span></h3>
+        <p-table [value]="r.ingresos" dataKey="codigoCuenta">
+          <ng-template pTemplate="header"><tr><th style="width:7rem">Código</th><th>Cuenta</th><th class="text-right">Valor</th></tr></ng-template>
+          <ng-template pTemplate="body" let-x><tr><td class="nx-mono">{{ x.codigoCuenta }}</td><td>{{ x.nombreCuenta }}</td><td class="text-right">{{ x.saldo | number: '1.0-2' }}</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin ingresos</td></tr></ng-template>
+        </p-table>
+      </div>
+      <div class="panel">
+        <h3 class="panel-title">Costos y gastos <span class="tot">{{ r.totalCostosGastos | number: '1.0-2' }}</span></h3>
+        <p-table [value]="r.costosGastos" dataKey="codigoCuenta">
+          <ng-template pTemplate="header"><tr><th style="width:7rem">Código</th><th>Cuenta</th><th class="text-right">Valor</th></tr></ng-template>
+          <ng-template pTemplate="body" let-x><tr><td class="nx-mono">{{ x.codigoCuenta }}</td><td>{{ x.nombreCuenta }}</td><td class="text-right">{{ x.saldo | number: '1.0-2' }}</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="empty-row">Sin costos/gastos</td></tr></ng-template>
+        </p-table>
+      </div>
+    </div>
+  } @else {
+    <div class="hint-box">Selecciona un periodo y genera el estado de resultados.</div>
+  }
+</div>

@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-bell"></i></span>
+      <div>
+        <h1 class="head-title">Novedades de nómina</h1>
+        <p class="head-sub">Novedades del periodo, incluidos embargos</p>
+      </div>
+    </div>
+    <p-button label="Nueva novedad" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por empleado o concepto…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Empleado</th>
+          <th>Concepto</th>
+          <th style="width: 12rem" class="text-right">Cantidad / valor</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 11rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr [class.anulada]="row.anulado">
+          <td>{{ row.empleadoNombre }}</td>
+          <td>{{ row.conceptoNombre }}</td>
+          <td class="text-right">{{ row.cantidadValor | number: '1.0-2' }}</td>
+          <td>
+            @if (row.anulado) {
+              <p-tag value="Anulada" severity="danger" />
+            } @else {
+              <p-tag [value]="row.estadoNovedad || 'registrada'" severity="success" />
+            }
+          </td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)" [disabled]="row.anulado"></button>
+            <button pButton icon="pi pi-ban" severity="warn" [text]="true" (click)="anular(row)" [disabled]="row.anulado"></button>
+            <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Sin novedades registradas</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-novedad-nomina [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />

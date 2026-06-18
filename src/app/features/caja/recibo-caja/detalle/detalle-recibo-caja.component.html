@@ -1,0 +1,59 @@
+@if (recibo(); as r) {
+  <div class="page">
+    <header class="page-head">
+      <div class="head-left">
+        <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+        <span class="head-icon"><i class="pi pi-receipt"></i></span>
+        <div>
+          <h1 class="head-title">Recibo {{ r.numero ?? '#' + r.id }}</h1>
+          <p class="head-sub">{{ r.fecha }} · Caja #{{ r.cajaId }}</p>
+        </div>
+      </div>
+      <div class="head-actions">
+        <p-tag [value]="r.estado" [severity]="r.estado === 'registrado' ? 'success' : 'danger'" />
+        @if (r.estado === 'registrado') {
+          <p-button label="Anular" icon="pi pi-ban" severity="danger" [outlined]="true" (onClick)="anular()" />
+        }
+      </div>
+    </header>
+
+    <div class="card">
+      <h3 class="lines-title">Medios de pago</h3>
+      <table class="lines">
+        <thead>
+          <tr><th>Forma de pago</th><th class="r">Valor</th></tr>
+        </thead>
+        <tbody>
+          @for (p of r.pagos; track p.id) {
+            <tr>
+              <td class="nx-mono">{{ p.formaPagoId ? '#' + p.formaPagoId : 'Efectivo' }}</td>
+              <td class="r nx-mono">{{ p.valor | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr><td class="r b">Total</td><td class="r b nx-mono">{{ r.valor | number: '1.2-2' }}</td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 class="lines-title">Aplicación a cartera</h3>
+      <table class="lines">
+        <thead>
+          <tr><th>Cuenta por cobrar</th><th class="r">Valor aplicado</th></tr>
+        </thead>
+        <tbody>
+          @for (l of r.lineas; track l.id) {
+            <tr>
+              <td class="nx-mono">#{{ l.cuentaPorCobrarId }}</td>
+              <td class="r nx-mono">{{ l.valorAplicado | number: '1.2-2' }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="2" class="empty">Sin aplicación (anticipo / saldo a favor)</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

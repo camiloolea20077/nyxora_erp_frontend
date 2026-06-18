@@ -1,0 +1,97 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
+      <span class="head-icon"><i class="pi pi-money-bill"></i></span>
+      <div>
+        <h1 class="head-title">Nueva obligación de pago</h1>
+        <p class="head-sub">Cuenta por pagar y retenciones</p>
+      </div>
+    </div>
+    <div class="head-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
+      <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+    </div>
+  </header>
+
+  <div class="card">
+    <form [formGroup]="frm" class="cab">
+      <div class="field col-2">
+        <label>Proveedor *</label>
+        <div class="prov-pick">
+          <span class="picked" [class.empty]="!proveedorNombre()">{{ proveedorNombre() || 'Ninguno seleccionado' }}</span>
+          <p-button label="Buscar" icon="pi pi-search" [text]="true" size="small" (onClick)="openSelector()" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="o-num">Número</label>
+        <input pInputText id="o-num" formControlName="numero" />
+      </div>
+      <div class="field">
+        <label for="o-fecha">Fecha *</label>
+        <input pInputText id="o-fecha" type="date" formControlName="fecha" />
+      </div>
+      <div class="field">
+        <label for="o-venc">Fecha vencimiento</label>
+        <input pInputText id="o-venc" type="date" formControlName="fechaVencimiento" />
+      </div>
+      <div class="field">
+        <label for="o-val">Valor total *</label>
+        <p-inputNumber inputId="o-val" formControlName="valorTotal" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="2" />
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="lines-head">
+      <h3>Retenciones</h3>
+      <p-button label="Agregar retención" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregar()" />
+    </div>
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width: 35%">Impuesto / retención</th>
+          <th class="r">Base</th>
+          <th class="r">Valor</th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ret of retenciones(); track ret._id) {
+          <tr>
+            <td>
+              <p-select [(ngModel)]="ret.impuestoId" [ngModelOptions]="{ standalone: true }" [options]="impuestos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Selecciona…" appendTo="body" />
+            </td>
+            <td><p-inputNumber [(ngModel)]="ret.base" [ngModelOptions]="{ standalone: true }" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td><p-inputNumber [(ngModel)]="ret.valor" [ngModelOptions]="{ standalone: true }" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
+            <td class="text-center">
+              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitar(ret._id)"></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="hint">Sin retenciones</td></tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="r b" colspan="2">Σ retenciones</td>
+          <td class="r b nx-mono">{{ totalRetenciones() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="r b" colspan="2">Saldo a pagar</td>
+          <td class="r b nx-mono">{{ saldoPreview() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="hint"><i class="pi pi-info-circle"></i> Saldo = valor total − Σ retenciones. El pago se hace con un egreso (Tesorería).</p>
+  </div>
+</div>
+
+<app-tercero-selector
+  [visible]="showSelector()"
+  (visibleChange)="showSelector.set($event)"
+  header="Buscar proveedor"
+  (selected)="onProveedorSelected($event)"
+/>

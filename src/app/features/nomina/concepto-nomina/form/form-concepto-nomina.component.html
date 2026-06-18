@@ -1,0 +1,92 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar concepto' : 'Nuevo concepto de nómina'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="cn-codigo">Código</label>
+        <input
+          pInputText
+          id="cn-codigo"
+          formControlName="codigo"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('codigo')"
+        />
+        @if (isInvalid('codigo')) {
+          <small class="error">El código es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="cn-clase">Clase</label>
+        <p-select
+          inputId="cn-clase"
+          appendTo="body"
+          [options]="clases"
+          optionLabel="label"
+          optionValue="value"
+          formControlName="clase"
+          placeholder="Seleccione…"
+          [class.ng-invalid]="isInvalid('clase')"
+        />
+        @if (isInvalid('clase')) {
+          <small class="error">La clase es obligatoria</small>
+        }
+      </div>
+      <div class="field col-2">
+        <label for="cn-nombre">Nombre</label>
+        <input
+          pInputText
+          id="cn-nombre"
+          formControlName="nombre"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('nombre')"
+        />
+        @if (isInvalid('nombre')) {
+          <small class="error">El nombre es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="cn-frec">Frecuencia</label>
+        <p-select
+          inputId="cn-frec"
+          appendTo="body"
+          [options]="frecuencias"
+          optionLabel="label"
+          optionValue="value"
+          formControlName="frecuencia"
+          [showClear]="true"
+          placeholder="Seleccione…"
+        />
+      </div>
+      <div class="field"></div>
+      <div class="field col-2">
+        <label for="cn-formula">Fórmula</label>
+        <textarea
+          pTextarea
+          id="cn-formula"
+          formControlName="formula"
+          rows="3"
+          class="w-full"
+          placeholder="Ej: SUELDO * 0.04"
+        ></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

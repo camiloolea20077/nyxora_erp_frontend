@@ -1,0 +1,25 @@
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+.text-right {
+  text-align: right;
+}
+.neg {
+  color: var(--nx-danger);
+  font-weight: 600;
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  padding: 1rem;
+}
+:host ::ng-deep .sel {
+  min-width: 14rem;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+}

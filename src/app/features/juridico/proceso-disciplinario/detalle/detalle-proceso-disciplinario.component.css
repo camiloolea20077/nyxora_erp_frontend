@@ -1,0 +1,41 @@
+.estado-box {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+.head-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.add-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+.add-row .grow {
+  flex: 1;
+  min-width: 12rem;
+}
+.add-row .tipo {
+  width: 10rem;
+}
+.empty-row {
+  text-align: center;
+  color: var(--nx-muted);
+  padding: 1rem;
+}
+:host ::ng-deep .add-row .grow.p-select {
+  flex: 1;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.55rem 0.9rem;
+}

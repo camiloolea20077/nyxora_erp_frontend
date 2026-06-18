@@ -1,0 +1,103 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar cargo' : 'Nuevo cargo'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '640px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="grid2">
+      <div class="field">
+        <label for="c-codigo">Código</label>
+        <input
+          pInputText
+          id="c-codigo"
+          formControlName="codigo"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('codigo')"
+        />
+        @if (isInvalid('codigo')) {
+          <small class="error">El código es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="c-nombre">Nombre</label>
+        <input
+          pInputText
+          id="c-nombre"
+          formControlName="nombre"
+          class="w-full"
+          [class.ng-invalid]="isInvalid('nombre')"
+        />
+        @if (isInvalid('nombre')) {
+          <small class="error">El nombre es obligatorio</small>
+        }
+      </div>
+      <div class="field">
+        <label for="c-nivel">Nivel</label>
+        <input pInputText id="c-nivel" formControlName="nivelCargo" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="c-grado">Grado</label>
+        <input pInputText id="c-grado" formControlName="grado" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="c-trem">Tipo de remuneración</label>
+        <input pInputText id="c-trem" formControlName="tipoRemuneracion" class="w-full" />
+      </div>
+      <div class="field"></div>
+      <div class="field">
+        <label for="c-sb">Sueldo básico</label>
+        <p-inputNumber
+          inputId="c-sb"
+          formControlName="sueldoBasico"
+          mode="currency"
+          currency="COP"
+          locale="es-CO"
+        />
+      </div>
+      <div class="field">
+        <label for="c-sm">Sueldo máximo</label>
+        <p-inputNumber
+          inputId="c-sm"
+          formControlName="sueldoMaximo"
+          mode="currency"
+          currency="COP"
+          locale="es-CO"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="c-mision">Misión</label>
+        <textarea
+          pTextarea
+          id="c-mision"
+          formControlName="mision"
+          rows="2"
+          class="w-full"
+        ></textarea>
+      </div>
+      <div class="field col-2">
+        <label for="c-desc">Descripción</label>
+        <textarea
+          pTextarea
+          id="c-desc"
+          formControlName="descripcion"
+          rows="2"
+          class="w-full"
+        ></textarea>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button
+      [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+      icon="pi pi-check"
+      [loading]="loading()"
+      (onClick)="save()"
+    />
+  </ng-template>
+</p-dialog>

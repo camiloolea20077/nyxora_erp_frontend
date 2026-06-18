@@ -1,0 +1,102 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-file"></i></span>
+      <div>
+        <h1 class="head-title">Facturas</h1>
+        <p class="head-sub">Facturación de venta</p>
+      </div>
+    </div>
+    <p-button label="Nueva factura" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="text"
+        placeholder="Buscar por número…"
+        [(ngModel)]="search"
+        (keyup.enter)="onSearch()"
+      />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10rem">Número</th>
+          <th>Cliente</th>
+          <th style="width: 9rem">Fecha</th>
+          <th style="width: 11rem" class="r">Total</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 13rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.numero }}</td>
+          <td>{{ cliente(row.clienteId) }}</td>
+          <td>{{ row.fecha }}</td>
+          <td class="r nx-mono">{{ row.total | number: '1.2-2' }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+          <td class="text-center">
+            <button
+              pButton
+              icon="pi pi-eye"
+              [text]="true"
+              pTooltip="Ver / emitir"
+              (click)="ver(row)"
+            ></button>
+            @if (row.estado === 'borrador') {
+              <button
+                pButton
+                icon="pi pi-pencil"
+                [text]="true"
+                pTooltip="Editar"
+                (click)="editar(row)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                pTooltip="Eliminar"
+                (click)="eliminar(row)"
+              ></button>
+            }
+            @if (row.estado === 'borrador' || row.estado === 'emitida') {
+              <button
+                pButton
+                icon="pi pi-ban"
+                [text]="true"
+                severity="danger"
+                pTooltip="Anular"
+                (click)="anular(row)"
+              ></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="empty-row">Sin facturas</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />

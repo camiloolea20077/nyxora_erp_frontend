@@ -1,0 +1,28 @@
+<p-dialog
+  [header]="isEdit() ? 'Editar clasificación' : 'Nueva clasificación de falta'"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onShow)="onShow()"
+  [modal]="true"
+  [style]="{ width: '460px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="cf-codigo">Código</label>
+      <input pInputText id="cf-codigo" formControlName="codigo" class="w-full" [class.ng-invalid]="isInvalid('codigo')" />
+      @if (isInvalid('codigo')) { <small class="error">El código es obligatorio</small> }
+    </div>
+    <div class="field">
+      <label for="cf-nombre">Nombre</label>
+      <input pInputText id="cf-nombre" formControlName="nombre" class="w-full" [class.ng-invalid]="isInvalid('nombre')" />
+      @if (isInvalid('nombre')) { <small class="error">El nombre es obligatorio</small> }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

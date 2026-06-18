@@ -1,0 +1,65 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-id-card"></i></span>
+      <div>
+        <h1 class="head-title">Vinculaciones</h1>
+        <p class="head-sub">Vinculación laboral de los empleados</p>
+      </div>
+    </div>
+    <p-button label="Nueva vinculación" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por empleado o código…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 10rem">Código</th>
+          <th>Empleado</th>
+          <th>Cargo</th>
+          <th style="width: 11rem" class="text-right">Sueldo</th>
+          <th style="width: 9rem">Ingreso</th>
+          <th style="width: 9rem">Estado</th>
+          <th style="width: 7rem" class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td class="nx-mono">{{ row.codigo }}</td>
+          <td>{{ row.empleadoNombre }}</td>
+          <td>{{ row.cargoNombre }}</td>
+          <td class="text-right">{{ row.sueldo | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+          <td>{{ row.fecha }}</td>
+          <td><p-tag [value]="row.estadoVinculacion" [severity]="row.estadoVinculacion === 'activa' ? 'success' : 'warn'" /></td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" [text]="true" (click)="editar(row)"></button>
+            <button pButton icon="pi pi-trash" severity="danger" [text]="true" (click)="eliminar(row)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="7" class="empty-row">Sin vinculaciones registradas</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog />
+<app-form-vinculacion [visible]="showForm()" (visibleChange)="showForm.set($event)" [registro]="editing()" (saved)="onSaved()" />

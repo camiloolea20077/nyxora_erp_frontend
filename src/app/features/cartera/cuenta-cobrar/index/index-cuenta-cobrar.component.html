@@ -1,0 +1,61 @@
+<div class="page">
+  <header class="page-head">
+    <div class="head-left">
+      <span class="head-icon"><i class="pi pi-money-bill"></i></span>
+      <div>
+        <h1 class="head-title">Cuentas por cobrar</h1>
+        <p class="head-sub">Cartera de clientes</p>
+      </div>
+    </div>
+    <p-button label="Nueva CxC" icon="pi pi-plus" (onClick)="nuevo()" />
+  </header>
+
+  <div class="toolbar">
+    <span class="search">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por estado…" [(ngModel)]="search" (keyup.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="rows()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="total()"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      (onLazyLoad)="onLazy($event)"
+      dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th style="width: 8rem">Factura</th>
+          <th style="width: 9rem">Emisión</th>
+          <th style="width: 9rem">Vence</th>
+          <th style="width: 11rem" class="r">Total</th>
+          <th style="width: 11rem" class="r">Saldo</th>
+          <th style="width: 9rem">Estado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ cliente(row.clienteId) }}</td>
+          <td class="nx-mono">{{ row.facturaId ? '#' + row.facturaId : '—' }}</td>
+          <td>{{ row.fechaEmision }}</td>
+          <td>{{ row.fechaVencimiento }}</td>
+          <td class="r nx-mono">{{ row.valorTotal | number: '1.2-2' }}</td>
+          <td class="r nx-mono b">{{ row.saldo | number: '1.2-2' }}</td>
+          <td><p-tag [value]="row.estado" [severity]="estadoSeverity(row.estado)" /></td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="7" class="empty-row">Sin cuentas por cobrar</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<app-form-cuenta-cobrar [visible]="showForm()" (visibleChange)="showForm.set($event)" (saved)="onSaved()" />

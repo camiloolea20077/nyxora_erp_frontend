@@ -4,13 +4,20 @@
       <button pButton icon="pi pi-arrow-left" [text]="true" (click)="volver()"></button>
       <span class="head-icon"><i class="pi pi-shopping-cart"></i></span>
       <div>
-        <h1 class="head-title">{{ isEdit() ? 'Editar orden de compra' : 'Nueva orden de compra' }}</h1>
+        <h1 class="head-title">
+          {{ isEdit() ? 'Editar orden de compra' : 'Nueva orden de compra' }}
+        </h1>
         <p class="head-sub">Encabezado y líneas</p>
       </div>
     </div>
     <div class="head-actions">
       <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="volver()" />
-      <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+      <p-button
+        [label]="isEdit() ? 'Actualizar' : 'Guardar'"
+        icon="pi pi-check"
+        [loading]="loading()"
+        (onClick)="save()"
+      />
     </div>
   </header>
 
@@ -19,13 +26,30 @@
       <div class="field col-2">
         <label>Proveedor *</label>
         <div class="prov-pick">
-          <span class="picked" [class.empty]="!proveedorNombre()">{{ proveedorNombre() || 'Ninguno seleccionado' }}</span>
-          <p-button label="Buscar" icon="pi pi-search" [outlined]="true" (onClick)="openSelector()" />
+          <span class="picked" [class.empty]="!proveedorNombre()">{{
+            proveedorNombre() || 'Ninguno seleccionado'
+          }}</span>
+          <p-button
+            label="Buscar"
+            icon="pi pi-search"
+            [text]="true"
+            size="small"
+            (onClick)="openSelector()"
+          />
         </div>
       </div>
       <div class="field">
         <label for="oc-tipo">Tipo de documento *</label>
-        <p-select inputId="oc-tipo" formControlName="tipoDocumentoId" [options]="tiposDocumento()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" placeholder="Selecciona…" />
+        <p-select
+          inputId="oc-tipo"
+          formControlName="tipoDocumentoId"
+          [options]="tiposDocumento()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          placeholder="Selecciona…"
+        />
       </div>
       <div class="field">
         <label for="oc-numero">Número</label>
@@ -41,23 +65,67 @@
       </div>
       <div class="field">
         <label for="oc-bodega">Bodega</label>
-        <p-select inputId="oc-bodega" formControlName="bodegaId" [options]="bodegas()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Opcional)" />
+        <p-select
+          inputId="oc-bodega"
+          formControlName="bodegaId"
+          [options]="bodegas()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
       </div>
       <div class="field">
         <label for="oc-sede">Sede</label>
-        <p-select inputId="oc-sede" formControlName="sedeId" [options]="sedes()" optionLabel="name" optionValue="id" [showClear]="true" placeholder="(Opcional)" />
+        <p-select
+          inputId="oc-sede"
+          formControlName="sedeId"
+          [options]="sedes()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
       </div>
       <div class="field">
         <label for="oc-vig">Vigencia</label>
-        <p-select inputId="oc-vig" formControlName="vigenciaId" [options]="vigencias()" optionLabel="year" optionValue="id" [showClear]="true" placeholder="(Opcional)" />
+        <p-select
+          inputId="oc-vig"
+          formControlName="vigenciaId"
+          [options]="vigencias()"
+          optionLabel="year"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
       </div>
       <div class="field">
         <label for="oc-cc">Centro de costo</label>
-        <p-select inputId="oc-cc" formControlName="centroCostoId" [options]="centros()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="(Opcional)" />
+        <p-select
+          inputId="oc-cc"
+          formControlName="centroCostoId"
+          [options]="centros()"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre,codigo"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
       </div>
       <div class="field">
         <label for="oc-cond">Condición de pago</label>
-        <p-select inputId="oc-cond" formControlName="condicionPagoId" [options]="condiciones()" optionLabel="nombre" optionValue="id" [showClear]="true" placeholder="(Opcional)" />
+        <p-select
+          inputId="oc-cond"
+          formControlName="condicionPagoId"
+          [options]="condiciones()"
+          optionLabel="nombre"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="(Opcional)"
+        />
       </div>
       <div class="field col-3">
         <label for="oc-obs">Observaciones</label>
@@ -69,7 +137,13 @@
   <div class="card">
     <div class="lines-head">
       <h3>Líneas</h3>
-      <p-button label="Agregar línea" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="agregar()" />
+      <p-button
+        label="Agregar línea"
+        icon="pi pi-plus"
+        size="small"
+        [outlined]="true"
+        (onClick)="agregar()"
+      />
     </div>
 
     <table class="lines">
@@ -89,18 +163,76 @@
         @for (linea of lineas(); track linea._id) {
           <tr>
             <td>
-              <p-select [(ngModel)]="linea.productoId" [ngModelOptions]="{ standalone: true }" [options]="productos()" optionLabel="nombre" optionValue="id" [filter]="true" filterBy="nombre,codigo" [showClear]="true" placeholder="Producto…" appendTo="body" />
+              <p-select
+                [(ngModel)]="linea.productoId"
+                [ngModelOptions]="{ standalone: true }"
+                [options]="productos()"
+                optionLabel="nombre"
+                optionValue="id"
+                [filter]="true"
+                filterBy="nombre,codigo"
+                [showClear]="true"
+                placeholder="Producto…"
+                appendTo="body"
+              />
             </td>
-            <td><input pInputText [(ngModel)]="linea.descripcion" [ngModelOptions]="{ standalone: true }" /></td>
-            <td><p-inputNumber [(ngModel)]="linea.cantidad" [ngModelOptions]="{ standalone: true }" (ngModelChange)="recalc()" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
-            <td><p-inputNumber [(ngModel)]="linea.valorUnitario" [ngModelOptions]="{ standalone: true }" (ngModelChange)="recalc()" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
-            <td><p-inputNumber [(ngModel)]="linea.descuentoPorcentaje" [ngModelOptions]="{ standalone: true }" (ngModelChange)="recalc()" [minFractionDigits]="0" [maxFractionDigits]="2" /></td>
             <td>
-              <p-select [(ngModel)]="linea.impuestoId" [ngModelOptions]="{ standalone: true }" [options]="impuestos()" optionLabel="nombre" optionValue="id" [showClear]="true" placeholder="(Ninguno)" appendTo="body" />
+              <input
+                pInputText
+                [(ngModel)]="linea.descripcion"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </td>
+            <td>
+              <p-inputNumber
+                [(ngModel)]="linea.cantidad"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="recalc()"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="2"
+              />
+            </td>
+            <td>
+              <p-inputNumber
+                [(ngModel)]="linea.valorUnitario"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="recalc()"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="2"
+              />
+            </td>
+            <td>
+              <p-inputNumber
+                [(ngModel)]="linea.descuentoPorcentaje"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="recalc()"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="2"
+              />
+            </td>
+            <td>
+              <p-select
+                [(ngModel)]="linea.impuestoId"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="recalc()"
+                [options]="impuestos()"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="(Ninguno)"
+                appendTo="body"
+              />
             </td>
             <td class="r nx-mono">{{ lineaNeto(linea) | number: '1.2-2' }}</td>
             <td class="text-center">
-              <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="quitar(linea._id)"></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                size="small"
+                (click)="quitar(linea._id)"
+              ></button>
             </td>
           </tr>
         }
@@ -117,13 +249,21 @@
           <td></td>
         </tr>
         <tr>
-          <td colspan="6" class="r b">Neto (sin impuestos)</td>
-          <td class="r b nx-mono">{{ neto() | number: '1.2-2' }}</td>
+          <td colspan="6" class="r">Impuestos</td>
+          <td class="r nx-mono">{{ impuesto() | number: '1.2-2' }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="6" class="r b">Total</td>
+          <td class="r b nx-mono">{{ total() | number: '1.2-2' }}</td>
           <td></td>
         </tr>
       </tfoot>
     </table>
-    <p class="hint"><i class="pi pi-info-circle"></i> Los impuestos y el total final los calcula el backend al guardar.</p>
+    <p class="hint">
+      <i class="pi pi-info-circle"></i> El total es una vista previa; el backend recalcula los
+      impuestos al guardar.
+    </p>
   </div>
 </div>
 

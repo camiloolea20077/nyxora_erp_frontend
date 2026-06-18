@@ -1,0 +1,43 @@
+<p-dialog
+  header="Nueva cuenta por cobrar"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="dialog-form">
+    <div class="field">
+      <label for="c-cli">Cliente</label>
+      <p-select
+        inputId="c-cli"
+        formControlName="clienteId"
+        [options]="clientes()"
+        optionLabel="nombre"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nombre,numeroDocumento"
+        placeholder="Selecciona…"
+        appendTo="body"
+      />
+    </div>
+    <div class="field">
+      <label for="c-fe">Fecha de emisión</label>
+      <input pInputText id="c-fe" type="date" formControlName="fechaEmision" class="w-full" />
+    </div>
+    <div class="field">
+      <label for="c-fv">Fecha de vencimiento</label>
+      <input pInputText id="c-fv" type="date" formControlName="fechaVencimiento" class="w-full" />
+    </div>
+    <div class="field">
+      <label for="c-val">Valor total</label>
+      <p-inputNumber inputId="c-val" formControlName="valorTotal" mode="currency" currency="COP" locale="es-CO" [maxFractionDigits]="2" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button label="Guardar" icon="pi pi-check" [loading]="loading()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

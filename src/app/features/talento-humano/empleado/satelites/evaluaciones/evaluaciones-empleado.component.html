@@ -1,0 +1,82 @@
+<section class="sat">
+  <div class="sat-head">
+    <h3>Evaluaciones de desempeño</h3>
+    <p-button label="Agregar" icon="pi pi-plus" size="small" [outlined]="true" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="items()" [loading]="loading()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Programa</th>
+        <th style="width: 10rem">Tipo</th>
+        <th style="width: 12rem">Fecha</th>
+        <th style="width: 8rem" class="text-right">Calificación</th>
+        <th style="width: 6rem" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ programaNombre(row.evaluacionProgramaId) }}</td>
+        <td>{{ row.tipoEvaluacion }}</td>
+        <td>{{ row.fechaInicial }}</td>
+        <td class="text-right">{{ row.calificacion }}</td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" [text]="true" size="small" (click)="editar(row)"></button>
+          <button pButton icon="pi pi-trash" severity="danger" [text]="true" size="small" (click)="eliminar(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5" class="empty-row">Sin evaluaciones</td></tr>
+    </ng-template>
+  </p-table>
+</section>
+
+<p-dialog
+  [header]="isEdit() ? 'Editar evaluación' : 'Nueva evaluación'"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="frm" class="sat-dialog-form">
+    <div class="sat-grid">
+      <div class="field col-2">
+        <label for="ev-prog">Programa</label>
+        <p-select
+          inputId="ev-prog"
+          [options]="programas()"
+          optionLabel="nombre"
+          optionValue="id"
+          formControlName="evaluacionProgramaId"
+          [filter]="true"
+          [showClear]="true"
+          placeholder="Seleccione…"
+        />
+      </div>
+      <div class="field col-2">
+        <label for="ev-tipo">Tipo de evaluación</label>
+        <input pInputText id="ev-tipo" formControlName="tipoEvaluacion" placeholder="anual, periodo de prueba…" />
+      </div>
+      <div class="field">
+        <label for="ev-fi">Fecha inicial</label>
+        <input pInputText id="ev-fi" type="datetime-local" formControlName="fechaInicial" />
+      </div>
+      <div class="field">
+        <label for="ev-ff">Fecha final</label>
+        <input pInputText id="ev-ff" type="datetime-local" formControlName="fechaFinal" />
+      </div>
+      <div class="field">
+        <label for="ev-cal">Calificación</label>
+        <p-inputNumber inputId="ev-cal" formControlName="calificacion" [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0" />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+    <p-button [label]="isEdit() ? 'Actualizar' : 'Guardar'" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+  </ng-template>
+</p-dialog>
